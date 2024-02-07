@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- Boxicons -->
     <link
       href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
       rel="stylesheet"
     />
-
     <!-- My CSS -->
     <link rel="stylesheet" href="style.css" />
 
@@ -18,6 +18,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css
 "
     />
+
     <title>Admin Hub</title>
   </head>
   <body>
@@ -69,6 +70,8 @@
       </ul>
     </section>
     <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
     <section id="content">
       <!-- NAVBAR -->
       <nav>
@@ -93,16 +96,281 @@
           <h1 class="display-4">TRACTOR MANAGEMENT SYSTEM</h1>
           <p class="lead">Efficiently manage your tractor fleet with ease.</p>
         </div>
+
+        <!-- Tractors Section -->
+        <div class="tab-pane fade show active" id="tractorSection">
+          <div class="row">
+            <div>
+              <div class="card">
+                <div class="card-header">
+                  <h2>TRACTOR LIST</h2>
+                  <div class="row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-3">
+                      <label for="search">Search:</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="search"
+                        placeholder="Enter keyword"
+                      />
+                    </div>
+                    <div class="col-lg-3">
+                      <label for="filterBy">Filter By:</label>
+                      <select class="form-control" id="filterBy">
+                        <option value="selectDefault">
+                          Select option below
+                        </option>
+                        <option value="brand">Brand</option>
+                        <option value="model">Model</option>
+                        <option value="tractorNumber">Tractor Number</option>
+                        <option value="hoursePower">Horse Power</option>
+                        <option value="serialNumber">Serial Number</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-2 mt-4">
+                      <button class="btn btn-secondary text-semibold">
+                        Filter
+                      </button>
+                    </div>
+                    <!-- Button trigger modal -->
+                    <div class="addNewButton col-lg-2 mt-4">
+                      <button
+                        type="button"
+                        class="btn btn-primary rounded me-3 mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#tractorModal"
+                      >
+                        Add New
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TRACTOR DETAILS TABLE STARTS -->
+                <section id="table" class="container">
+                  <div class="row">
+                    <table class="content-table">
+                      <thead>
+                        <tr>
+                          <th>Tractor ID</th>
+                          <th>Tractor Number</th>
+                          <th>Brand</th>
+                          <th>Model</th>
+                          <th>Horse Power</th>
+                          <th>Serial Number</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>200</td>
+                          <td>501</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>200</td>
+                          <td>501</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>3</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>200</td>
+                          <td>501</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>4</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>200</td>
+                          <td>501</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>5</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>200</td>
+                          <td>501</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+                <!-- TRACTOR DETAILS TABLE ENDS -->
+
+                <!-- Modal -->
+                <div
+                  class="modal fade"
+                  id="tractorModal"
+                  tabindex="-1"
+                  aria-labelledby="addNewTractor"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addNewTractor">
+                          Add New Tractor
+                        </h1>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <!-- INPUT MODAL DETAILS FOR TRACTOR STARTS -->
+                        <div id="card" class="mt-5 mb-5">
+                          <div class="card shadow-lg">
+                            <div class="card-body">
+                              <form id="addEditTractorForm">
+                                <div class="row mb-3">
+                                  <div class="col-md-4">
+                                    <label for="brand">Tractor Number</label>
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand"
+                                      required
+                                    />
+                                  </div>
+                                  <div class="col-md-4">
+                                    <label for="brand">Brand:</label>
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand"
+                                      required
+                                    />
+                                  </div>
+                                  <div class="col-md-4">
+                                    <label for="model">Model:</label>
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      id="model"
+                                      required
+                                    />
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <label for="year">HorsePower:</label>
+                                    <input
+                                      type="number"
+                                      class="form-control"
+                                      id="horsePower"
+                                      required
+                                    />
+                                  </div>
+                                  <div class="form-group col-md-4">
+                                    <label for="hours">Serial Number:</label>
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      id="serialNumber"
+                                    />
+                                  </div>
+                                  <div class="col-md-4 mt-2">
+                                    <label class="mb-1">Current Status:</label>
+                                    <div
+                                      class="d-flex justify-content-start gap-3"
+                                    >
+                                      <div class="form-check">
+                                        <input
+                                          class="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="active"
+                                        />
+                                        <label
+                                          class="form-check-label"
+                                          for="active"
+                                        >
+                                          Active
+                                        </label>
+                                      </div>
+
+                                      <div class="form-check">
+                                        <input
+                                          class="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="deactivate"
+                                        />
+                                        <label
+                                          class="form-check-label"
+                                          for="deactivate"
+                                        >
+                                          Deactivate
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- INPUT MODAL DETAILS FOR TRACTOR ENDS -->
+                      </div>
+
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <div class="addNewButton">
+                          <button type="button" class="btn btn-primary">
+                            Save changes
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="container"><h3>Tractor Master</h3></div>
     </section>
-
     <!-- CONTENT -->
 
+    <!-- Link to custom JS file -->
     <script src="script.js"></script>
 
-    <!-- Bootstrap js CDN -->
+    <!-- Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js
 "></script>
   </body>
