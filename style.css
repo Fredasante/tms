@@ -19,10 +19,6 @@ li {
   --grey: #eee;
   --dark-grey: #aaaaaa;
   --dark: #342e37;
-  --red: #db504a;
-  --yellow: #ffce26;
-  --light-yellow: #fff2c6;
-  --orange: #fd7238;
   --light-orange: #ffe0d3;
 }
 
@@ -413,17 +409,16 @@ body {
   margin: 10px 0;
   font-size: 14px;
   min-width: 100%;
-  border-radius: 5px 5px 0 0;
 }
 
 .content-table tr td,
 .content-table thead th {
   border: 1px solid #dddddd;
+  text-align: center;
 }
 
 .content-table thead tr {
   background-color: #e6eaed;
-  color: white;
   text-align: left;
   font-weight: bold;
   color: black;
@@ -432,11 +427,6 @@ body {
 .content-table th,
 .content-table td {
   padding: 12px 15px;
-}
-
-.content-table tbody span {
-  font-weight: 700;
-  text-transform: uppercase;
 }
 
 .content-table tbody tr {
@@ -463,11 +453,6 @@ body {
 /* CARD */
 #card .card {
   border: none;
-}
-
-#card .card-header {
-  background-color: #0d225a;
-  color: white;
 }
 
 input,
@@ -503,23 +488,28 @@ textarea {
 }
 
 /* MODAL FOR TRACROR MASTER */
+.btn-secondary {
+  background: #873e23 !important;
+  border: none !important;
+}
+
 .addNewButton button {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   margin-left: auto;
-  background: #0d225a;
+  background: #0d225a !important;
   border: none;
 }
 
 /* USER MASTER */
 .input-group button {
-  background: #0d225a;
   color: white;
   border: none;
+  background: #873e23;
 }
 
-/* NEW USER REGISTRATION MODAL*/
+/* NEW REGISTRATION MODAL*/
 #signUp {
   display: flex;
   justify-content: center;
@@ -637,4 +627,14 @@ form input[type="radio"] {
   .container .content .category {
     flex-direction: column;
   }
+}
+
+/* USER */
+.filter-container {
+  display: flex;
+  justify-content: center;
+}
+
+.date-input {
+  margin-bottom: 10px;
 }

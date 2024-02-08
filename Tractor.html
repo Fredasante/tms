@@ -98,7 +98,7 @@
         </div>
 
         <!-- Tractors Section -->
-        <div class="tab-pane fade show active" id="tractorSection">
+        <div>
           <div class="row">
             <div>
               <div class="card">
@@ -247,92 +247,54 @@
                       </div>
                       <div class="modal-body">
                         <!-- INPUT MODAL DETAILS FOR TRACTOR STARTS -->
-                        <div id="card" class="mt-5 mb-5">
-                          <div class="card shadow-lg">
-                            <div class="card-body">
-                              <form id="addEditTractorForm">
-                                <div class="row mb-3">
-                                  <div class="col-md-4">
-                                    <label for="brand">Tractor Number</label>
+                        <div id="signUp">
+                          <div class="signup-container">
+                            <div class="title">NEW TRACTOR REGISTRATION</div>
+                            <p class=""></p>
+                            <div class="content">
+                              <form action="#">
+                                <div class="user-details">
+                                  <div class="input-box">
+                                    <span class="details">Tractor Number</span>
                                     <input
                                       type="text"
-                                      class="form-control"
-                                      id="brand"
+                                      placeholder="Enter tractor number"
                                       required
                                     />
                                   </div>
-                                  <div class="col-md-4">
-                                    <label for="brand">Brand:</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand"
-                                      required
-                                    />
-                                  </div>
-                                  <div class="col-md-4">
-                                    <label for="model">Model:</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="model"
-                                      required
-                                    />
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-md-4">
-                                    <label for="year">HorsePower:</label>
-                                    <input
-                                      type="number"
-                                      class="form-control"
-                                      id="horsePower"
-                                      required
-                                    />
-                                  </div>
-                                  <div class="form-group col-md-4">
-                                    <label for="hours">Serial Number:</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="serialNumber"
-                                    />
-                                  </div>
-                                  <div class="col-md-4 mt-2">
-                                    <label class="mb-1">Current Status:</label>
-                                    <div
-                                      class="d-flex justify-content-start gap-3"
-                                    >
-                                      <div class="form-check">
-                                        <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="active"
-                                        />
-                                        <label
-                                          class="form-check-label"
-                                          for="active"
-                                        >
-                                          Active
-                                        </label>
-                                      </div>
 
-                                      <div class="form-check">
-                                        <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="deactivate"
-                                        />
-                                        <label
-                                          class="form-check-label"
-                                          for="deactivate"
-                                        >
-                                          Deactivate
-                                        </label>
-                                      </div>
-                                    </div>
+                                  <div class="input-box">
+                                    <span class="details">Brand</span>
+                                    <input
+                                      type="text"
+                                      placeholder="Enter brand"
+                                      required
+                                    />
+                                  </div>
+                                  <div class="input-box">
+                                    <span class="details">Tractor Model</span>
+                                    <select name="" id="">
+                                      <option value="defaultSelect">
+                                        Select type of model
+                                      </option>
+                                      <option value="mahindra">Mahindra</option>
+                                      <option value="holland">
+                                        New Holland
+                                      </option>
+                                      <option value="horse">Wheel Horse</option>
+                                    </select>
+                                  </div>
+                                  <div class="input-box">
+                                    <span class="details">HorsePower</span>
+                                    <input type="number" required />
+                                  </div>
+                                  <div class="input-box">
+                                    <span class="details">Serial Number</span>
+                                    <input
+                                      type="text"
+                                      placeholder="Enter serial number"
+                                      required
+                                    />
                                   </div>
                                 </div>
                               </form>
@@ -343,16 +305,12 @@
                       </div>
 
                       <div class="modal-footer">
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          data-bs-dismiss="modal"
-                        >
-                          Close
-                        </button>
                         <div class="addNewButton">
-                          <button type="button" class="btn btn-primary">
-                            Save changes
+                          <button
+                            type="button"
+                            class="btn btn-primary pt-2 ps-5 pe-5 pb-2"
+                          >
+                            Save
                           </button>
                         </div>
                       </div>
