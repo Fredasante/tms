@@ -18,3 +18,16 @@ const sidebar = document.getElementById("sidebar");
 menuBar.addEventListener("click", function () {
   sidebar.classList.toggle("hide");
 });
+
+// Function to toggle inputs visibility
+function toggleInputs() {
+  var inputs = document.querySelectorAll(".hidden"); // Select all inputs with class 'hidden'
+  inputs.forEach(function (input) {
+    input.classList.toggle("hidden"); // Toggle the 'hidden' class
+  });
+}
+
+// Add click event listener to the button
+document.getElementById("toggleButton").addEventListener("click", function () {
+  toggleInputs(); // Call the toggleInputs function when the button is clicked
+});

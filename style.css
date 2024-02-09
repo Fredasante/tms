@@ -39,7 +39,6 @@ body {
   width: 280px;
   height: 100%;
   background: var(--light);
-  /* z-index: 2000; */
   transition: 0.3s ease;
   overflow-x: hidden;
   scrollbar-width: none;
@@ -246,6 +245,10 @@ body {
   #content nav .nav-link {
     display: none;
   }
+
+  #content .bx-search {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -254,27 +257,6 @@ body {
   }
 
   #content nav form .form-input button {
-    width: auto;
-    height: auto;
-    background: transparent;
-    border-radius: none;
-    color: var(--dark);
-  }
-
-  #content nav form.show .form-input input {
-    display: block;
-    width: 100%;
-  }
-  #content nav form.show .form-input button {
-    width: 36px;
-    height: 100%;
-    border-radius: 0 36px 36px 0;
-    color: var(--light);
-    background: var(--red);
-  }
-
-  #content nav form.show ~ .notification,
-  #content nav form.show ~ .profile {
     display: none;
   }
 }
@@ -394,6 +376,20 @@ body {
   font-size: 16px;
 }
 
+@media (max-width: 768px) {
+  .jumbotron {
+    padding: 5px;
+  }
+
+  .jumbotron h1 {
+    font-size: 17px;
+  }
+
+  .jumbotron p {
+    font-size: 14px;
+  }
+}
+
 /* TABLE */
 #table {
   min-height: 22vh;
@@ -441,6 +437,13 @@ body {
 @media (max-width: 768px) {
   #table {
     min-height: 20vh;
+    overflow: scroll;
+  }
+
+  #table h3,
+  .card-header h2 {
+    font-size: 16px;
+    margin: 13px 0;
   }
 }
 
@@ -464,7 +467,8 @@ textarea {
 }
 
 .card-header input:focus,
-.card-header select:focus {
+.card-header select:focus,
+#table .form-control:focus {
   border: none;
   outline: none;
   box-shadow: none;
@@ -493,6 +497,29 @@ textarea {
   border: none !important;
 }
 
+.btn-primary {
+  background: rgb(30, 102, 30) !important;
+}
+
+.btn-outline-secondary {
+  background: rgb(156, 21, 21) !important;
+}
+
+.check-container {
+  display: flex !important;
+  justify-content: flex-end;
+}
+
+/* Hide the inputs by default */
+.hidden {
+  display: none;
+}
+
+.altBtn button {
+  background: #177584 !important;
+}
+
+/* USER MASTER */
 .addNewButton button {
   display: flex;
   justify-content: flex-end;
@@ -502,11 +529,60 @@ textarea {
   border: none;
 }
 
-/* USER MASTER */
 .input-group button {
   color: white;
   border: none;
   background: #873e23;
+}
+
+@media (max-width: 768px) {
+  .addNewButton button {
+    margin-right: 0px !important;
+  }
+}
+
+/* TRACTOR MASTER */
+@media (max-width: 768px) {
+  .row .col-lg-3 {
+    margin-bottom: 10px;
+  }
+
+  .row .col-lg-2 {
+    margin-top: 5px !important;
+  }
+}
+
+/* MODEL MASTER */
+
+@media (max-width: 768px) {
+  #table .form-check {
+    margin-top: 0 !important;
+    margin-left: 14px !important;
+  }
+}
+
+/* DAILY WORK */
+.filter-container {
+  display: flex;
+  justify-content: center;
+}
+
+.date-input {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .filter-container {
+    flex-direction: column;
+  }
+
+  #work .row .col-lg-6 {
+    margin-top: 0 !important;
+  }
+
+  .date-input {
+    padding: 5px 10px;
+  }
 }
 
 /* NEW REGISTRATION MODAL*/
@@ -525,7 +601,7 @@ textarea {
   background-color: #fff;
   padding: 25px 30px;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  background: #fdfdff;
 }
 .signup-container .title {
   font-size: 20px;
@@ -569,10 +645,10 @@ form .input-box span.details {
 }
 .user-details .input-box input:focus,
 .user-details .input-box input:valid {
-  border-color: #9b59b6;
+  border-color: #0d225a;
 }
 form .gender-details .gender-title {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 500;
 }
 form .category {
@@ -595,8 +671,14 @@ form .category label .dot {
   border: 5px solid transparent;
   transition: all 0.3s ease;
 }
-#dot-1:checked ~ .category label .one,
-#dot-2:checked ~ .category label .two {
+#male:checked ~ .category label .one,
+#female:checked ~ .category label .two {
+  background: #0d225a;
+  border-color: #d9d9d9;
+}
+
+#males:checked ~ .category label .one,
+#females:checked ~ .category label .two {
   background: #0d225a;
   border-color: #d9d9d9;
 }
@@ -627,14 +709,4 @@ form input[type="radio"] {
   .container .content .category {
     flex-direction: column;
   }
-}
-
-/* USER */
-.filter-container {
-  display: flex;
-  justify-content: center;
-}
-
-.date-input {
-  margin-bottom: 10px;
 }
