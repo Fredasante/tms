@@ -308,6 +308,11 @@ body {
   background-color: #c4c3c3;
 }
 
+.error-container {
+  width: 90% !important;
+  /* display: flex; */
+}
+
 .form-container {
   display: flex;
 }
@@ -410,12 +415,12 @@ body {
 .content-table tr td,
 .content-table thead th {
   border: 1px solid #dddddd;
-  text-align: center;
+  text-align: left;
 }
 
 .content-table thead tr {
   background-color: #e6eaed;
-  text-align: left;
+  /* text-align: left; */
   font-weight: bold;
   color: black;
 }
@@ -583,13 +588,17 @@ textarea {
   .date-input {
     padding: 5px 10px;
   }
+
+  .input-box textarea {
+    width: 100%;
+  }
 }
 
 /* NEW REGISTRATION MODAL*/
 #signUp {
   display: flex;
   justify-content: center;
-  align-items: center;
+  background-color: #f4f6f9;
 }
 #signUp p {
   margin: 10px 0 30px 0;

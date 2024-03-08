@@ -31,3 +31,12 @@ function toggleInputs() {
 document.getElementById("toggleButton").addEventListener("click", function () {
   toggleInputs(); // Call the toggleInputs function when the button is clicked
 });
+
+document
+  .getElementById("add-user-form")
+  .addEventListener("submit", function (event) {
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    // Additional custom behavior or validation can be added here
+  });

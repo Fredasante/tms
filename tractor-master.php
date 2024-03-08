@@ -1,3 +1,19 @@
+<?php
+require 'config.php';
+
+// Start the session
+session_start();
+
+// Check if the user is not authenticated or if the user is not an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    // Redirect the user to the login page or an unauthorized access page
+    header('Location: login.php'); // or header('Location: unauthorized.php');
+    exit(); // Stop further execution
+}
+
+// The user is authenticated and is an admin, continue to user-master page
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,7 +26,7 @@
       rel="stylesheet"
     />
     <!-- My CSS -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
 
     <!-- Boostrap CDN -->
     <link
@@ -30,37 +46,47 @@
       </a>
       <ul class="side-menu top">
         <li>
-          <a href="Admin.html">
+          <a href="dashboard.php">
+            <i class="bx bxs-user-account"></i>
+            <span class="text">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="user-master.php">
             <i class="bx bxs-user-account"></i>
             <span class="text">User Master</span>
           </a>
         </li>
         <li>
-          <a href="Tractor.html">
-            <i class="bx bxs-car"></i>
+          <a href="tractor-master.php">
+            <img
+              src="assets/images/tractor.png"
+              style="height: 17px; margin-left: 13px; margin-right: 10px"
+              alt="tractor icon"
+            />
             <span class="text">Tractor Master</span>
           </a>
         </li>
         <li>
-          <a href="Model.html">
+          <a href="model.php">
             <i class="bx bxs-package"></i>
             <span class="text">Model Master</span>
           </a>
         </li>
         <li>
-          <a href="Report.html">
+          <a href="report.php">
             <i class="bx bxs-report"></i>
             <span class="text">Reports</span>
           </a>
         </li>
         <li>
-          <a href="Task.html">
+          <a href="task.php">
             <i class="bx bx-task"></i>
             <span class="text">Task Master</span>
           </a>
         </li>
         <li>
-          <a href="User.html">
+          <a href="user.php">
             <i class="bx bxs-group"></i>
             <span class="text">Daily Work</span>
           </a>
@@ -68,7 +94,7 @@
       </ul>
       <ul class="side-menu">
         <li>
-          <a href="#" class="logout">
+          <a href="logout.php" class="logout">
             <i class="bx bxs-log-out-circle"></i>
             <span class="text-danger">Logout</span>
           </a>
@@ -92,61 +118,59 @@
           </div>
         </form>
         <a href="#" class="profile me-5">
-          <img src="images/people.png" />
+          <img src="assets/images/people.png" />
         </a>
       </nav>
       <!-- NAVBAR -->
 
-      <div id="work" class="container">
+      <div id="tractorMaster" class="container">
         <div class="jumbotron text-center">
           <h1 class="display-4">TRACTOR MANAGEMENT SYSTEM</h1>
           <p class="lead">Efficiently manage your tractor fleet with ease.</p>
         </div>
 
-        <!-- User Section -->
+        <!-- Tractors Section -->
         <div>
           <div class="row">
             <div>
               <div class="card">
                 <div class="card-header">
-                  <h2>VIEW DAILY WORK</h2>
+                  <h2>TRACTOR LIST</h2>
                   <div class="row">
-                    <div class="col-lg-6 mt-4">
-                      <div class="filter-container">
-                        <label class="mt-1">From:</label>
-                        <input type="date" class="date-input ms-2 me-2" />
-                        <label class="mt-1">To:</label>
-                        <input type="date" class="date-input ms-2 me-2" />
-                        <div class="altBtn col-lg-2">
-                          <button
-                            type="button"
-                            class="btn btn-secondary rounded ms-1 mb-2"
-                          >
-                            Filter
-                          </button>
-                        </div>
-                      </div>
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-3">
+                      <label for="search">Search:</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="search"
+                        placeholder="Enter keyword"
+                      />
                     </div>
-                    <div class="col-lg-4 mt-4">
-                      <div class="input-group mb-3">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Search.."
-                        />
-                        <button class="btn btn-secondary" type="button">
-                          Find
-                        </button>
-                      </div>
+                    <div class="col-lg-3">
+                      <label for="filterBy">Filter By:</label>
+                      <select class="form-control" id="filterBy">
+                        <option value="selectDefault">
+                          Select option below
+                        </option>
+                        <option value="brand">Brand</option>
+                        <option value="model">Model</option>
+                        <option value="tractorNumber">Tractor Number</option>
+                        <option value="hoursePower">Horsepower</option>
+                      </select>
                     </div>
-
-                    <!-- Button trigger modal for adding daily work -->
+                    <div class="col-lg-2 mt-4">
+                      <button class="btn btn-secondary text-semibold">
+                        Filter
+                      </button>
+                    </div>
+                    <!-- Button trigger modal -->
                     <div class="addNewButton col-lg-2 mt-4">
                       <button
                         type="button"
-                        class="btn btn-secondary rounded me-3 mb-2"
+                        class="btn btn-primary rounded me-3 mb-2"
                         data-bs-toggle="modal"
-                        data-bs-target="#userModal"
+                        data-bs-target="#tractorModal"
                       >
                         Add New
                       </button>
@@ -154,74 +178,90 @@
                   </div>
                 </div>
 
-                <!-- USER DETAILS TABLE STARTS -->
+                <!-- TRACTOR DETAILS TABLE STARTS -->
                 <section id="table" class="container">
                   <div class="row">
                     <table class="content-table">
                       <thead>
                         <tr>
-                          <th>Date</th>
-                          <th>Task</th>
-                          <th>Hours Used</th>
-                          <th>Area Covered (m)</th>
+                          <th>Sr. No</th>
                           <th>Tractor Number</th>
+                          <th>Brand</th>
+                          <th>Model</th>
+                          <th>Horsepower</th>
+                          <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
+                          <td>1</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>30</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
                         </tr>
                         <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
+                          <td>2</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>30</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
                         </tr>
                         <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
+                          <td>3</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>30</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
                         </tr>
                         <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
+                          <td>4</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>30</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
                         </tr>
                         <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
                           <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
+                          <td>GA 1234</td>
+                          <td>Mahindra</td>
+                          <td>White Field Boss 4-210</td>
+                          <td>30</td>
+                          <td>
+                            <button class="btn btn-info btn-sm">Edit</button>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </section>
-                <!-- USER DETAILS TABLE ENDS -->
+                <!-- TRACTOR DETAILS TABLE ENDS -->
 
-                <!-- Modal for adding daily work  activity-->
+                <!-- Modal -->
                 <div
                   class="modal fade"
-                  id="userModal"
+                  id="tractorModal"
                   tabindex="-1"
-                  aria-labelledby="addNewUser"
+                  aria-labelledby="addNewTractor"
                   aria-hidden="true"
                 >
                   <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addNewUser">
-                          Add New Task
+                        <h1 class="modal-title fs-5" id="addNewTractor">
+                          Add New Tractor
                         </h1>
                         <button
                           type="button"
@@ -231,74 +271,59 @@
                         ></button>
                       </div>
                       <div class="modal-body">
-                        <!-- INPUT MODAL DETAILS FOR TASK STARTS -->
+                        <!-- INPUT MODAL DETAILS FOR TRACTOR STARTS -->
                         <div id="signUp">
                           <div class="signup-container">
-                            <div class="title">DAILY WORK</div>
-                            <p class="">
-                              Fill in the details below to record daily work
-                              activity.
-                            </p>
+                            <div class="title">NEW TRACTOR REGISTRATION</div>
+                            <p class=""></p>
                             <div class="content">
                               <form action="#">
                                 <div class="user-details">
                                   <div class="input-box">
-                                    <span class="details"
-                                      >Start Date & Time:</span
-                                    >
-                                    <input type="datetime-local" required />
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details"
-                                      >End Date & Time:</span
-                                    >
-                                    <input type="datetime-local" required />
-                                  </div>
-
-                                  <div class="input-box">
                                     <span class="details">Tractor Number</span>
                                     <input
                                       type="text"
-                                      placeholder="Enter Tractor Number"
+                                      placeholder="Enter tractor number"
                                       required
                                     />
                                   </div>
+
                                   <div class="input-box">
-                                    <span class="details">Task</span>
+                                    <span class="details">Serial Number</span>
                                     <input
                                       type="text"
-                                      placeholder="Enter specific task"
+                                      placeholder="Enter serial number"
                                       required
                                     />
                                   </div>
-
                                   <div class="input-box">
-                                    <span class="details">Hours Used:</span>
-                                    <input type="number" required />
+                                    <span class="details"
+                                      >Tractor Model/Brand</span
+                                    >
+                                    <select name="" id="">
+                                      <option value="defaultSelect">
+                                        Select type of model
+                                      </option>
+                                      <option value="mahindra">Mahindra</option>
+                                      <option value="holland">
+                                        New Holland
+                                      </option>
+                                      <option value="horse">Wheel Horse</option>
+                                    </select>
                                   </div>
                                   <div class="input-box">
-                                    <span class="details">Area Covered:</span>
+                                    <span class="details">Horsepower</span>
                                     <input type="number" required />
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Note:</span>
-                                    <textarea
-                                      cols="83"
-                                      rows="4"
-                                      placeholder="Enter message"
-                                      class="p-2"
-                                    ></textarea>
                                   </div>
                                 </div>
                               </form>
                             </div>
                           </div>
                         </div>
-                        <!-- INPUT MODAL DETAILS FOR TASK ENDS -->
+                        <!-- INPUT MODAL DETAILS FOR TRACTOR ENDS -->
                       </div>
 
-                      <div class="modal-footer me-5">
+                      <div class="modal-footer">
                         <div class="addNewButton">
                           <button
                             type="button"

@@ -10,7 +10,7 @@
       rel="stylesheet"
     />
     <!-- My CSS -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
 
     <!-- Boostrap CDN -->
     <link
@@ -30,37 +30,47 @@
       </a>
       <ul class="side-menu top">
         <li>
-          <a href="Admin.html">
+          <a href="dashboard.php">
+            <i class="bx bxs-user-account"></i>
+            <span class="text">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="user-master.php">
             <i class="bx bxs-user-account"></i>
             <span class="text">User Master</span>
           </a>
         </li>
         <li>
-          <a href="Tractor.html">
-            <i class="bx bxs-car"></i>
+          <a href="tractor-master.php">
+            <img
+              src="assets/images/tractor.png"
+              style="height: 17px; margin-left: 13px; margin-right: 10px"
+              alt="tractor icon"
+            />
             <span class="text">Tractor Master</span>
           </a>
         </li>
         <li>
-          <a href="Model.html">
+          <a href="model.php">
             <i class="bx bxs-package"></i>
             <span class="text">Model Master</span>
           </a>
         </li>
         <li>
-          <a href="Report.html">
+          <a href="report.php">
             <i class="bx bxs-report"></i>
             <span class="text">Reports</span>
           </a>
         </li>
         <li>
-          <a href="Task.html">
+          <a href="task.php">
             <i class="bx bx-task"></i>
             <span class="text">Task Master</span>
           </a>
         </li>
         <li>
-          <a href="User.html">
+          <a href="user.php">
             <i class="bx bxs-group"></i>
             <span class="text">Daily Work</span>
           </a>
@@ -68,7 +78,7 @@
       </ul>
       <ul class="side-menu">
         <li>
-          <a href="#" class="logout">
+          <a href="logout.php" class="logout">
             <i class="bx bxs-log-out-circle"></i>
             <span class="text-danger">Logout</span>
           </a>
@@ -92,7 +102,7 @@
           </div>
         </form>
         <a href="#" class="profile me-5">
-          <img src="images/people.png" />
+          <img src="assets/images/people.png" />
         </a>
       </nav>
       <!-- NAVBAR -->
