@@ -78,10 +78,10 @@
       </ul>
       <ul class="side-menu">
         <li>
-          <a href="logout.php" class="logout">
-            <i class="bx bxs-log-out-circle"></i>
-            <span class="text-danger">Logout</span>
-          </a>
+            <button class="logout-btn" type="button" onclick="location.href='logout.php'" class="logout">
+                <i class="bx bxs-log-out-circle"></i>
+                <span class="">Logout</span>
+            </button>
         </li>
       </ul>
     </section>

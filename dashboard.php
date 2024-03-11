@@ -13,6 +13,46 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 // User is authenticated and is an admin, continue to admin-dashboard page
+// Function to calculate age based on date of birth
+function calculateAge($dob) {
+    $today = new DateTime();
+    $birthdate = new DateTime($dob);
+    $age = $birthdate->diff($today)->y;
+    return $age;
+}
+
+// Query to retrieve total number of users
+$sql_total_users = "SELECT COUNT(*) AS total_users FROM users";
+$result_total_users = mysqli_query($con, $sql_total_users);
+$row_total_users = mysqli_fetch_assoc($result_total_users);
+$total_users = $row_total_users['total_users'];
+
+// Query to retrieve number of active users
+$sql_active_users = "SELECT COUNT(*) AS active_users FROM users WHERE status = 'active'";
+$result_active_users = mysqli_query($con, $sql_active_users);
+$row_active_users = mysqli_fetch_assoc($result_active_users);
+$active_users = $row_active_users['active_users'];
+
+// Query to retrieve number of inactive users
+$sql_inactive_users = "SELECT COUNT(*) AS inactive_users FROM users WHERE status = 'inactive'";
+$result_inactive_users = mysqli_query($con, $sql_inactive_users);
+$row_inactive_users = mysqli_fetch_assoc($result_inactive_users);
+$inactive_users = $row_inactive_users['inactive_users'];
+
+// Query to retrieve average user age
+$sql_average_age = "SELECT AVG(TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE())) AS average_age FROM users";
+$result_average_age = mysqli_query($con, $sql_average_age);
+$row_average_age = mysqli_fetch_assoc($result_average_age);
+
+// Query to retrieve recent login activity
+$sql_recent_logins = "SELECT users.name, login_history.login_time, login_history.ip_address 
+                      FROM login_history
+                      INNER JOIN users ON login_history.user_id = users.id
+                      ORDER BY login_history.login_time DESC
+                      LIMIT 5";
+$result_recent_logins = mysqli_query($con, $sql_recent_logins);
+
+// Display the dashboard
 ?>
 
 <!DOCTYPE html>
@@ -94,12 +134,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
       </ul>
       <ul class="side-menu">
         <li>
-          <a href="logout.php" class="logout">
-            <i class="bx bxs-log-out-circle"></i>
-            <span class="text-danger">Logout</span>
-          </a>
+            <button class="logout-btn" type="button" onclick="location.href='logout.php'" class="logout">
+                <i class="bx bxs-log-out-circle"></i>
+                <span class="">Logout</span>
+            </button>
         </li>
-      </ul>
+    </ul>
     </section>
     <!-- SIDEBAR -->
     <section id="content">
@@ -128,10 +168,120 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
         </div>
       </div>
 
-      <div class="container text-center"><h3>WELCOME USER</h3></div>
+      <div class="container">
+        <h2 class="text-center mt-4 mb-5 dashboard-title">ADMIN DASHBOARD</h2>
+
+        <div class="row gap-5 ms-3">
+          <div class="col-md-6 ">
+            <div class="card mb-3 " style="max-width: 38rem;">
+            <div class="card-header dashboard-one">
+              <h2>USER STATISTICS</h2>
+            </div>
+            <div class="card-body text-secondary">
+              <canvas id="userStatisticsChart" width="400" height="330"></canvas>
+            </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="row">
+            <div class="dashboard col-12">
+            <div class="card mb-3" style="max-width: 30rem;">
+            <div class="card-header dashboard-two">
+              <h2>RECENT LOGINS</h2>
+            </div>
+              <table class="content-table">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Timestamp</th>
+                            <th>IP Address</th>                       
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = mysqli_fetch_assoc($result_recent_logins)): ?>
+                        <tr>
+                        <td><?php echo $row['name']; ?></td>
+                        <td><?php echo $row['login_time']; ?></td>
+                        <td><?php echo $row['ip_address']; ?></td>
+                        </tr>
+                            <?php endwhile; ?>                                   
+                        </tbody>
+                      </table>
+                        </div>
+                      </div>
+
+                    <div class="row mt-3 dashboard">
+                      <div class="col-12 ">
+                        <div class="card mb-3" style="max-width: 18rem;">
+                        <div class="card-header dashboard-three">
+                          <h2>USERS</h2>
+                        </div>
+                        <div class="card-body text-secondary">
+                          <p>Total Users: <?php echo $total_users; ?></p>
+                          <p>Active Users: <?php echo $active_users; ?></p>
+                          <p>Inactive Users: <?php echo $inactive_users; ?></p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+          </div>
+          </div>
+        </div>
+
+             
+      
+
+
+    <!-- Add any other dashboard components or metrics here -->
+
+    <!-- Add any necessary JavaScript for interactive dashboard elements -->
+      </div>
     </section>
 
     <!-- CONTENT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    
+
+    <script>
+    // Get user statistics data from PHP
+    var totalUsers = <?php echo $total_users; ?>;
+    var activeUsers = <?php echo $active_users; ?>;
+    var inactiveUsers = <?php echo $inactive_users; ?>;
+
+    // Create the user statistics chart
+    var ctx = document.getElementById('userStatisticsChart').getContext('2d');
+    var userStatisticsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Total Users', 'Active Users', 'Inactive Users'],
+            datasets: [{
+                label: 'User Statistics',
+                data: [totalUsers, activeUsers, inactiveUsers],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)', // Red for total users
+                    'rgba(54, 162, 235, 0.5)', // Blue for active users
+                    'rgba(255, 206, 86, 0.5)' // Yellow for inactive users
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
 
     <script src="assets/js/script.js"></script>
 

@@ -719,3 +719,42 @@ form input[type="radio"] {
     flex-direction: column;
   }
 }
+
+/* admin dashboard page */
+.dashboard-title {
+  font-weight: 700 !important;
+  font-size: 25px !important;
+}
+
+.dashboard-one {
+  background: #f7f9ff !important;
+  color: black !important;
+}
+
+.dashboard-two {
+  background: #12a3ba !important;
+  color: white !important;
+}
+
+.dashboard-three {
+  background: #f7f9ff !important;
+  color: black !important;
+}
+
+.dashboard p {
+  color: black !important;
+}
+
+.dashboard ul li {
+  color: black;
+  margin-bottom: 25px !important;
+}
+
+.logout-btn {
+  background-color: rgb(174, 20, 20) !important;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-weight: bold;
+  border-radius: 6px;
+}
