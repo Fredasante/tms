@@ -196,9 +196,6 @@ if (isset($_POST['submit'])) {
             </button>
           </div>
         </form>
-        <a href="#" class="profile me-5">
-          <img src="assets/images/people.png" />
-        </a>
       </nav>
       <!-- NAVBAR -->
 

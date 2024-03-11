@@ -39,11 +39,6 @@ $result_inactive_users = mysqli_query($con, $sql_inactive_users);
 $row_inactive_users = mysqli_fetch_assoc($result_inactive_users);
 $inactive_users = $row_inactive_users['inactive_users'];
 
-// Query to retrieve average user age
-$sql_average_age = "SELECT AVG(TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE())) AS average_age FROM users";
-$result_average_age = mysqli_query($con, $sql_average_age);
-$row_average_age = mysqli_fetch_assoc($result_average_age);
-
 // Query to retrieve recent login activity
 $sql_recent_logins = "SELECT users.name, login_history.login_time, login_history.ip_address 
                       FROM login_history
@@ -155,9 +150,6 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
             </button>
           </div>
         </form>
-        <a href="#" class="profile me-5">
-          <img src="assets/images/people.png" />
-        </a>
       </nav>
       <!-- NAVBAR -->
 

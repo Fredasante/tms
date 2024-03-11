@@ -110,9 +110,6 @@ session_start();
             </button>
           </div>
         </form>
-        <a href="#" class="profile me-5">
-          <img src="images/people.png" />
-        </a>
       </nav>
       <!-- NAVBAR -->
 
