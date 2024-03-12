@@ -171,12 +171,14 @@ if (isset($_POST['submit'])) {
           </a>
         </li>
       </ul>
-      <ul class="side-menu">
+     <ul class="side-menu">
         <li>
-          <a href="logout.php" class="logout">
+           <form action="logout.php" method="post">
+            <button type="submit" class="logout-btn">
             <i class="bx bxs-log-out-circle"></i>
-            <span class="text-danger">Logout</span>
-          </a>
+            <span>Logout</span>
+            </button>
+          </form>
         </li>
       </ul>
     </section>

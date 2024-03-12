@@ -93,10 +93,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
       </ul>
       <ul class="side-menu">
         <li>
-            <button class="logout-btn" type="button" onclick="location.href='logout.php'" class="logout">
-                <i class="bx bxs-log-out-circle"></i>
-                <span class="">Logout</span>
+           <form action="logout.php" method="post">
+            <button type="submit" class="logout-btn">
+            <i class="bx bxs-log-out-circle"></i>
+            <span>Logout</span>
             </button>
+          </form>
         </li>
       </ul>
     </section>

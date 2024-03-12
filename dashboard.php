@@ -44,7 +44,7 @@ $sql_recent_logins = "SELECT users.name, login_history.login_time, login_history
                       FROM login_history
                       INNER JOIN users ON login_history.user_id = users.id
                       ORDER BY login_history.login_time DESC
-                      LIMIT 5";
+                      LIMIT 3";
 $result_recent_logins = mysqli_query($con, $sql_recent_logins);
 
 // Display the dashboard
@@ -129,12 +129,14 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
       </ul>
       <ul class="side-menu">
         <li>
-            <button class="logout-btn" type="button" onclick="location.href='logout.php'" class="logout">
-                <i class="bx bxs-log-out-circle"></i>
-                <span class="">Logout</span>
+           <form action="logout.php" method="post">
+            <button type="submit" class="logout-btn">
+            <i class="bx bxs-log-out-circle"></i>
+            <span>Logout</span>
             </button>
+          </form>
         </li>
-    </ul>
+      </ul>
     </section>
     <!-- SIDEBAR -->
     <section id="content">
@@ -175,7 +177,7 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-5">
             <div class="row">
             <div class="dashboard col-12">
             <div class="card mb-3" style="max-width: 30rem;">
