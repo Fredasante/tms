@@ -29,24 +29,30 @@ if (isset($_POST['submit'])) {
 
                     // Verify password
                     if (password_verify($password, $user['password'])) {
-                        // Password is correct, proceed with authentication
-                        // Set session variables
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['user_type'] = $user['type_of_user'];
+                        // Check if user is active
+                        if ($user['status'] === 'active') {
+                            // Password is correct and user is active, proceed with authentication
+                            // Set session variables
+                            $_SESSION['user_id'] = $user['id'];
+                            $_SESSION['user_type'] = $user['type_of_user'];
 
-                        // Insert login record into login history table
-                        $ip_address = $_SERVER['REMOTE_ADDR'];
-                        $user_id = $user['id'];
-                        $sql_insert_login = "INSERT INTO login_history (user_id, ip_address) VALUES ('$user_id', '$ip_address')";
-                        mysqli_query($con, $sql_insert_login);
+                            // Insert login record into login history table
+                            $ip_address = $_SERVER['REMOTE_ADDR'];
+                            $user_id = $user['id'];
+                            $sql_insert_login = "INSERT INTO login_history (user_id, ip_address) VALUES ('$user_id', '$ip_address')";
+                            mysqli_query($con, $sql_insert_login);
 
-                        // Redirect the user to the dashboard
-                        if ($_SESSION['user_type'] === 'admin') {
-                            header('location: dashboard.php');
+                            // Redirect the user to the dashboard
+                            if ($_SESSION['user_type'] === 'admin') {
+                                header('location: dashboard.php');
+                            } else {
+                                header('location: user.php');
+                            }
+                            exit();
                         } else {
-                            header('location: user.php');
+                            // User is inactive, display error message
+                            $alertMessage = '<div class="alert alert-danger text-center" role="alert">Your account is inactive. Please contact the administrator.</div>';
                         }
-                        exit();
                     } else {
                         // Password is incorrect
                         $alertMessage = '<div class="alert alert-danger text-center" role="alert">Incorrect password credentials</div>';
@@ -68,6 +74,7 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+
 
 
 

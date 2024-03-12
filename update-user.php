@@ -21,6 +21,7 @@ $address = '';
 $gender = '';
 $typeOfUser = '';
 $status = '';
+$alertMessage = '';
 
 $id = $_GET['updateid'];
 
@@ -38,7 +39,7 @@ if ($row) {
     $typeOfUser = $row['type_of_user'];
     $status = $row['status'];
 } else {
-    echo "User data not found";
+    $alertMessage = '<div class="alert alert-danger">User data not found</div>';
 }
 
 if (isset($_POST['submit'])) {
@@ -52,28 +53,41 @@ if (isset($_POST['submit'])) {
     $typeOfUser = $_POST['typeOfUser'];
     $status = isset($_POST['status']) ? 'active' : 'inactive'; // Get status from checkbox
 
-    // Update user information in the database
-    $sql = "UPDATE `users` SET name=?, email = ?, phone = ?, date_of_birth = ?, address = ?, gender = ?, type_of_user = ?, status = ?, updated_at = NOW() WHERE id = ?";
-    $stmt = mysqli_prepare($con, $sql);
-
-    if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "sssssssss", $name, $email, $phone, $dateOfBirth, $address, $gender, $typeOfUser, $status, $id);
-        mysqli_stmt_execute($stmt);
-
-        if (mysqli_stmt_affected_rows($stmt) > 0) {
-            header('location:user-master.php');
-        } else {
-            echo 'No changes made';
-        }
-
-        mysqli_stmt_close($stmt);
+    // Check if new password and confirm password match
+    if ($_POST['newPassword'] !== $_POST['confirmPassword']) {
+        $alertMessage = '<div class="alert alert-danger">New password and confirm password do not match</div>';
     } else {
-        echo 'Error in query preparation';
+        // Hash the new password
+        $hashedPassword = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
+
+        // Update user information including password in the database
+        $sql = "UPDATE `users` SET name=?, email = ?, phone = ?, date_of_birth = ?, address = ?, gender = ?, type_of_user = ?, status = ?, password = ?, updated_at = NOW() WHERE id = ?";
+        $stmt = mysqli_prepare($con, $sql);
+
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "sssssssssi", $name, $email, $phone, $dateOfBirth, $address, $gender, $typeOfUser, $status, $hashedPassword, $id);
+            mysqli_stmt_execute($stmt);
+
+            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                $alertMessage = '<div class="alert alert-success">User updated successfully</div>';
+                header('Location: user-master.php');
+                exit(); // Stop further execution after redirection
+            } else {
+                $alertMessage = '<div class="alert alert-warning">No changes made</div>';
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $alertMessage = '<div class="alert alert-danger">Error in query preparation</div>';
+        }
     }
 }
 
-
 ?>
+
+
+
+
 
 
 
@@ -194,6 +208,10 @@ if (isset($_POST['submit'])) {
         <div id="signUp" class="pt-4 pb-4">
           <div class="signup-container shadow">
             <div class="title">EDIT USER FORM</div>
+            <!-- Display alert message -->
+            <div class="mt-4">
+              <?php echo $alertMessage; ?>
+            </div>
             <div class="content">
               <form action="#" method="POST">
                 <div class="form-check check-container gap-1 mt-4 mb-3">
@@ -238,7 +256,7 @@ if (isset($_POST['submit'])) {
                     <span class="details">Date of Birth</span>
                     <input type="date" required name="dateOfBirth" value="<?php echo $dateOfBirth; ?>"/>
                   </div>
-                    <div class="input-box">
+                  <div class="input-box">
                     <span class="details">Address</span>
                     <input
                       type="text"
@@ -252,15 +270,15 @@ if (isset($_POST['submit'])) {
                     <span class="details">Password</span>
                     <input
                       type="password"
-                      placeholder="Enter your password"
-                      name="password"
+                      placeholder="Enter new password"
+                      name="newPassword"
                     />
                   </div>
                    <div class="input-box hidden">
                     <span class="details">Confirm Password</span>
                     <input
                       type="password"
-                      placeholder="Confirm your password"
+                      placeholder="Confirm new password"
                       name="confirmPassword"
                     />
                   </div>

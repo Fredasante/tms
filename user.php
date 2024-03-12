@@ -27,14 +27,14 @@ session_start();
 "
     />
 
-    <title>Admin Hub</title>
+    <title>User Hub</title>
   </head>
   <body>
     <!-- SIDEBAR -->
     <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">Admin Master</span>
+        <span class="text">User Hub</span>
     </a>
     <ul class="side-menu top">
         <?php if (isset($_SESSION['user_id'])): // Check if user is authenticated ?>
