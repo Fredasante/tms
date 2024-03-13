@@ -1,15 +1,15 @@
-const allSideMenu = document.querySelectorAll("#sidebar .side-menu.top li a");
+// const allSideMenu = document.querySelectorAll("#sidebar .side-menu.top li a");
 
-allSideMenu.forEach((item) => {
-  const li = item.parentElement;
+// allSideMenu.forEach((item) => {
+//   const li = item.parentElement;
 
-  item.addEventListener("click", function () {
-    allSideMenu.forEach((i) => {
-      i.parentElement.classList.remove("active");
-    });
-    li.classList.add("active");
-  });
-});
+//   item.addEventListener("click", function () {
+//     allSideMenu.forEach((i) => {
+//       i.parentElement.classList.remove("active");
+//     });
+//     li.classList.add("active");
+//   });
+// });
 
 // TOGGLE SIDEBAR
 const menuBar = document.querySelector("#content nav .bx.bx-menu");
@@ -28,15 +28,11 @@ function toggleInputs() {
 }
 
 // Add click event listener to the button
-document.getElementById("toggleButton").addEventListener("click", function () {
-  toggleInputs(); // Call the toggleInputs function when the button is clicked
+document.addEventListener("DOMContentLoaded", function () {
+  var toggleButton = document.getElementById("toggleButton");
+  if (toggleButton) {
+    toggleButton.addEventListener("click", function () {
+      toggleInputs(); // Call the toggleInputs function when the button is clicked
+    });
+  }
 });
-
-document
-  .getElementById("add-user-form")
-  .addEventListener("submit", function (event) {
-    // Prevent the default form submission behavior
-    event.preventDefault();
-
-    // Additional custom behavior or validation can be added here
-  });

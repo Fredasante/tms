@@ -76,33 +76,11 @@ body {
 #sidebar .side-menu li {
   height: 48px;
   background: transparent;
-  border-radius: 48px 0 0 48px;
 }
-#sidebar .side-menu li.active {
-  background: var(--grey);
-  position: relative;
-}
-#sidebar .side-menu li.active::before {
-  content: "";
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  top: -40px;
-  right: 0;
-  box-shadow: 20px 20px 0 var(--grey);
-  z-index: -1;
-}
-#sidebar .side-menu li.active::after {
-  content: "";
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  bottom: -40px;
-  right: 0;
-  box-shadow: 20px -20px 0 var(--grey);
-  z-index: -1;
+.active {
+  background-color: #0a256f !important;
+  color: white !important;
+  width: 70% !important;
 }
 #sidebar .side-menu li a {
   width: 100%;
@@ -110,25 +88,13 @@ body {
   background: var(--light);
   display: flex;
   align-items: center;
-  border-radius: 48px;
+  border-radius: 10px;
   font-size: 16px;
   color: var(--dark);
   white-space: nowrap;
   overflow-x: hidden;
 }
-#sidebar .side-menu.top li.active a {
-  color: var(--blue);
-}
-#sidebar.hide .side-menu li a {
-  width: calc(48px - (4px * 2));
-  transition: width 0.3s ease;
-}
-#sidebar .side-menu li a.logout {
-  color: var(--red);
-}
-#sidebar .side-menu.top li a:hover {
-  color: rgb(1, 1, 174);
-}
+
 #sidebar .side-menu li a .bx {
   min-width: calc(60px - ((4px + 6px) * 2));
   display: flex;
@@ -499,6 +465,11 @@ textarea {
 /* MODAL FOR TRACROR MASTER */
 .btn-secondary {
   background: #873e23 !important;
+  border: none !important;
+}
+
+.btn-tertiary {
+  background: #696000 !important;
   border: none !important;
 }
 

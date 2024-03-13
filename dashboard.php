@@ -13,13 +13,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 // User is authenticated and is an admin, continue to admin-dashboard page
-// Function to calculate age based on date of birth
-function calculateAge($dob) {
-    $today = new DateTime();
-    $birthdate = new DateTime($dob);
-    $age = $birthdate->diff($today)->y;
-    return $age;
-}
 
 // Query to retrieve total number of users
 $sql_total_users = "SELECT COUNT(*) AS total_users FROM users";
@@ -74,70 +67,67 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
   </head>
   <body>
     <!-- SIDEBAR -->
-    <section id="sidebar">
-      <a href="#" class="brand">
+  <section id="sidebar">
+    <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">Admin Hub</span>
-      </a>
-      <ul class="side-menu top">
+        <span class="text">Admin Master</span>
+    </a>
+    <ul class="side-menu top">
         <li>
-          <a href="dashboard.php">
-            <i class="bx bxs-user-account"></i>
-            <span class="text">Dashboard</span>
-          </a>
+            <a href="dashboard.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'dashboard.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">Dashboard</span>
+            </a>
         </li>
         <li>
-          <a href="user-master.php">
-            <i class="bx bxs-user-account"></i>
-            <span class="text">User Master</span>
-          </a>
+            <a href="user-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'user-master.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-user-account"></i>
+                <span class="text">User Master</span>
+            </a>
         </li>
         <li>
-          <a href="tractor-master.php">
-            <img
-              src="assets/images/tractor.png"
-              style="height: 17px; margin-left: 13px; margin-right: 10px"
-              alt="tractor icon"
-            />
-            <span class="text">Tractor Master</span>
-          </a>
+            <a href="tractor-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'tractor-master.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-car-wash' ></i>
+                <span class="text">Tractor Master</span>
+            </a>
         </li>
         <li>
-          <a href="model.php">
-            <i class="bx bxs-package"></i>
-            <span class="text">Model Master</span>
-          </a>
+            <a href="model.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'model.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-package"></i>
+                <span class="text">Model Master</span>
+            </a>
         </li>
         <li>
-          <a href="report.php">
-            <i class="bx bxs-report"></i>
-            <span class="text">Reports</span>
-          </a>
+            <a href="report.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'report.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-report"></i>
+                <span class="text">Reports</span>
+            </a>
         </li>
         <li>
-          <a href="task.php">
-            <i class="bx bx-task"></i>
-            <span class="text">Task Master</span>
-          </a>
+            <a href="task.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'task.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bx-task"></i>
+                <span class="text">Task Master</span>
+            </a>
         </li>
         <li>
-          <a href="user.php">
-            <i class="bx bxs-group"></i>
-            <span class="text">Daily Work</span>
-          </a>
+            <a href="daily-work" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-group"></i>
+                <span class="text">Daily Work</span>
+            </a>
         </li>
-      </ul>
-      <ul class="side-menu">
+    </ul>
+    <ul class="side-menu">
         <li>
-           <form action="logout.php" method="post">
-            <button type="submit" class="logout-btn">
-            <i class="bx bxs-log-out-circle"></i>
-            <span>Logout</span>
-            </button>
-          </form>
+            <form action="logout.php" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="bx bxs-log-out-circle"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </li>
-      </ul>
-    </section>
+    </ul>
+  </section>
+
     <!-- SIDEBAR -->
     <section id="content">
       <!-- NAVBAR -->
@@ -172,7 +162,7 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
               <h2>USER STATISTICS</h2>
             </div>
             <div class="card-body text-secondary">
-              <canvas id="userStatisticsChart" width="400" height="330"></canvas>
+              <canvas id="userStatisticsChart" width="400" height="300"></canvas>
             </div>
             </div>
           </div>

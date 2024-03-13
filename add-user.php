@@ -88,11 +88,6 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -118,70 +113,66 @@ if (isset($_POST['submit'])) {
   </head>
   <body>
     <!-- SIDEBAR -->
-    <section id="sidebar">
-      <a href="#" class="brand">
+  <section id="sidebar">
+    <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
         <span class="text">Admin Master</span>
-      </a>
-      <ul class="side-menu top">
+    </a>
+    <ul class="side-menu top">
         <li>
-          <a href="dashboard.php">
-            <i class="bx bxs-user-account"></i>
-            <span class="text">Dashboard</span>
-          </a>
+            <a href="dashboard.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'dashboard.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">Dashboard</span>
+            </a>
         </li>
         <li>
-          <a href="user-master.php">
-            <i class="bx bxs-user-account"></i>
-            <span class="text">User Master</span>
-          </a>
+            <a href="user-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'user-master.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-user-account"></i>
+                <span class="text">User Master</span>
+            </a>
         </li>
         <li>
-          <a href="tractor-master.php">
-            <img
-              src="assets/images/tractor.png"
-              style="height: 17px; margin-left: 13px; margin-right: 10px"
-              alt="tractor icon"
-            />
-            <span class="text">Tractor Master</span>
-          </a>
+            <a href="tractor-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'tractor-master.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-car-wash' ></i>
+                <span class="text">Tractor Master</span>
+            </a>
         </li>
         <li>
-          <a href="model.php">
-            <i class="bx bxs-package"></i>
-            <span class="text">Model Master</span>
-          </a>
+            <a href="model.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'model.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-package"></i>
+                <span class="text">Model Master</span>
+            </a>
         </li>
         <li>
-          <a href="report.php">
-            <i class="bx bxs-report"></i>
-            <span class="text">Reports</span>
-          </a>
+            <a href="report.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'report.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-report"></i>
+                <span class="text">Reports</span>
+            </a>
         </li>
         <li>
-          <a href="task.php">
-            <i class="bx bx-task"></i>
-            <span class="text">Task Master</span>
-          </a>
+            <a href="task.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'task.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bx-task"></i>
+                <span class="text">Task Master</span>
+            </a>
         </li>
         <li>
-          <a href="user.php">
-            <i class="bx bxs-group"></i>
-            <span class="text">Daily Work</span>
-          </a>
+            <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-group"></i>
+                <span class="text">Daily Work</span>
+            </a>
         </li>
-      </ul>
-     <ul class="side-menu">
+    </ul>
+    <ul class="side-menu">
         <li>
-           <form action="logout.php" method="post">
-            <button type="submit" class="logout-btn">
-            <i class="bx bxs-log-out-circle"></i>
-            <span>Logout</span>
-            </button>
-          </form>
+            <form action="logout.php" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="bx bxs-log-out-circle"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </li>
-      </ul>
-    </section>
+    </ul>
+  </section>
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->
@@ -299,20 +290,8 @@ if (isset($_POST['submit'])) {
                         <span class="gender">Female</span>
                       </label>
                     </div>
-                  </div>           
-
-
-<!-- 
-                <div class="input-box">
-                    <span class="details">Select gender</span>
-                    <select name="gender" id="">
-                      <option value="defaultSelect">Select gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                    </select>
-                  </div>
-                </div> -->
-
+                  </div> 
+                            
                  <!-- Display validation errors -->
                   <?php if (!empty($errors)): ?>
                    <div class="alert alert-danger">

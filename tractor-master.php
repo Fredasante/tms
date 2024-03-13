@@ -39,70 +39,66 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
   </head>
   <body>
     <!-- SIDEBAR -->
-    <section id="sidebar">
-      <a href="#" class="brand">
+  <section id="sidebar">
+    <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">Admin Hub</span>
-      </a>
-      <ul class="side-menu top">
+        <span class="text">Admin Master</span>
+    </a>
+    <ul class="side-menu top">
         <li>
-          <a href="dashboard.php">
-            <i class="bx bxs-user-account"></i>
-            <span class="text">Dashboard</span>
-          </a>
+            <a href="dashboard.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'dashboard.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">Dashboard</span>
+            </a>
         </li>
         <li>
-          <a href="user-master.php">
-            <i class="bx bxs-user-account"></i>
-            <span class="text">User Master</span>
-          </a>
+            <a href="user-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'user-master.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-user-account"></i>
+                <span class="text">User Master</span>
+            </a>
         </li>
         <li>
-          <a href="tractor-master.php">
-            <img
-              src="assets/images/tractor.png"
-              style="height: 17px; margin-left: 13px; margin-right: 10px"
-              alt="tractor icon"
-            />
-            <span class="text">Tractor Master</span>
-          </a>
+            <a href="tractor-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'tractor-master.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-car-wash' ></i>
+                <span class="text">Tractor Master</span>
+            </a>
         </li>
         <li>
-          <a href="model.php">
-            <i class="bx bxs-package"></i>
-            <span class="text">Model Master</span>
-          </a>
+            <a href="model.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'model.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-package"></i>
+                <span class="text">Model Master</span>
+            </a>
         </li>
         <li>
-          <a href="report.php">
-            <i class="bx bxs-report"></i>
-            <span class="text">Reports</span>
-          </a>
+            <a href="report.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'report.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-report"></i>
+                <span class="text">Reports</span>
+            </a>
         </li>
         <li>
-          <a href="task.php">
-            <i class="bx bx-task"></i>
-            <span class="text">Task Master</span>
-          </a>
+            <a href="task.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'task.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bx-task"></i>
+                <span class="text">Task Master</span>
+            </a>
         </li>
         <li>
-          <a href="user.php">
-            <i class="bx bxs-group"></i>
-            <span class="text">Daily Work</span>
-          </a>
+            <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-group"></i>
+                <span class="text">Daily Work</span>
+            </a>
         </li>
-      </ul>
-      <ul class="side-menu">
+    </ul>
+    <ul class="side-menu">
         <li>
-           <form action="logout.php" method="post">
-            <button type="submit" class="logout-btn">
-            <i class="bx bxs-log-out-circle"></i>
-            <span>Logout</span>
-            </button>
-          </form>
+            <form action="logout.php" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="bx bxs-log-out-circle"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </li>
-      </ul>
-    </section>
+    </ul>
+  </section>
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->
@@ -136,43 +132,33 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                 <div class="card-header">
                   <h2>TRACTOR LIST</h2>
                   <div class="row">
-                    <div class="col-lg-2"></div>
-                    <div class="col-lg-3">
-                      <label for="search">Search:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="search"
-                        placeholder="Enter keyword"
-                      />
-                    </div>
-                    <div class="col-lg-3">
-                      <label for="filterBy">Filter By:</label>
-                      <select class="form-control" id="filterBy">
-                        <option value="selectDefault">
-                          Select option below
-                        </option>
-                        <option value="brand">Brand</option>
-                        <option value="model">Model</option>
-                        <option value="tractorNumber">Tractor Number</option>
-                        <option value="hoursePower">Horsepower</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-2 mt-4">
-                      <button class="btn btn-secondary text-semibold">
-                        Filter
-                      </button>
-                    </div>
-                    <!-- Button trigger modal -->
-                    <div class="addNewButton col-lg-2 mt-4">
-                      <button
-                        type="button"
-                        class="btn btn-primary rounded me-3 mb-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#tractorModal"
-                      >
-                        Add New
-                      </button>
+                    <div class="col-lg-5"></div>
+                
+                    <div class="col-lg-4">
+                      <div class="input-group mb-3">
+                        <input
+                          id="live_search"           
+                          type="text"
+                          class="form-control"
+                          placeholder="Enter Search Query"
+                        />
+                        <button class="btn btn-tertiary" type="button">
+                          Find
+                        </button>
+                      </div>
+                    </div>                
+                    
+                    <!-- Button for adding new user -->
+                    <div class="addNewButton col-lg-3">
+                      <a href="add-tractor.php">
+                        <button
+                          type="button"
+                          class="btn btn-secondary rounded me-3 mb-2"
+                        >
+                          <i class="bx bxs-user me-2"></i>
+                          Add New
+                        </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -269,69 +255,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                           aria-label="Close"
                         ></button>
                       </div>
-                      <div class="modal-body">
-                        <!-- INPUT MODAL DETAILS FOR TRACTOR STARTS -->
-                        <div id="signUp">
-                          <div class="signup-container">
-                            <div class="title">NEW TRACTOR REGISTRATION</div>
-                            <p class=""></p>
-                            <div class="content">
-                              <form action="#">
-                                <div class="user-details">
-                                  <div class="input-box">
-                                    <span class="details">Tractor Number</span>
-                                    <input
-                                      type="text"
-                                      placeholder="Enter tractor number"
-                                      required
-                                    />
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Serial Number</span>
-                                    <input
-                                      type="text"
-                                      placeholder="Enter serial number"
-                                      required
-                                    />
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details"
-                                      >Tractor Model/Brand</span
-                                    >
-                                    <select name="" id="">
-                                      <option value="defaultSelect">
-                                        Select type of model
-                                      </option>
-                                      <option value="mahindra">Mahindra</option>
-                                      <option value="holland">
-                                        New Holland
-                                      </option>
-                                      <option value="horse">Wheel Horse</option>
-                                    </select>
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details">Horsepower</span>
-                                    <input type="number" required />
-                                  </div>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- INPUT MODAL DETAILS FOR TRACTOR ENDS -->
-                      </div>
-
-                      <div class="modal-footer">
-                        <div class="addNewButton">
-                          <button
-                            type="button"
-                            class="btn btn-primary pt-2 ps-5 pe-5 pb-2"
-                          >
-                            Save
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -344,7 +267,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     <!-- CONTENT -->
 
     <!-- Link to custom JS file -->
-    <script src="script.js"></script>
+    <script src="assets/js/script.js"></script>
 
     <!-- Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js
