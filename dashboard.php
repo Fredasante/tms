@@ -70,7 +70,7 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
   <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">Admin Master</span>
+        <span class="text">Admin Hub</span>
     </a>
     <ul class="side-menu top">
         <li>

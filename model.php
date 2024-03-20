@@ -1,17 +1,73 @@
+
 <?php
 require 'config.php';
 
-// Start the session
-session_start();
-
-// Check if the user is not authenticated or if the user is not an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    // Redirect the user to the login page or an unauthorized access page
-    header('Location: login.php'); // or header('Location: unauthorized.php');
-    exit(); // Stop further execution
+// Function to fetch record by ID from the database
+function fetchRecordByID($conn, $modelID) {
+    $sql = "SELECT * FROM TractorModels WHERE ModelID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $modelID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
 }
 
-// The user is authenticated and is an admin, continue to user-master page
+// Check if the form is submitted for adding or editing
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if adding a new record
+    if (isset($_POST['add'])) {
+        // Retrieve form data for adding a new record
+        $modelName = $_POST['modelName'];
+        $isActive = isset($_POST['isActive']) ? 1 : 0; // Convert checkbox value to boolean
+
+        // Insert data into the database
+        $sql = "INSERT INTO TractorModels (ModelName, Active) VALUES (?, ?)";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("si", $modelName, $isActive);
+
+        if ($stmt->execute()) {
+            echo "New record added successfully";
+        } else {
+            echo "Error adding new record: " . $stmt->error;
+        }
+    }
+    // Check if editing an existing record
+    elseif (isset($_POST['edit'])) {
+        // Retrieve form data for editing an existing record
+        $modelID = $_POST['model_id'];
+        $updatedModelName = $_POST['modelName'];
+        $updatedActive = isset($_POST['isActive']) ? 1 : 0; // Convert checkbox value to boolean
+
+        // Update the record in the database
+        $sql = "UPDATE TractorModels SET ModelName = ?, Active = ? WHERE ModelID = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("sii", $updatedModelName, $updatedActive, $modelID);
+
+        if ($stmt->execute()) {
+            echo "Record updated successfully";
+        } else {
+            echo "Error updating record: " . $stmt->error;
+        }
+    }
+}
+
+// Check if the form is submitted for viewing
+if (isset($_POST['view'])) {
+    // Get the ID of the record
+    $modelID = $_POST['model_id'];
+
+    // Fetch the record from the database based on the ID
+    $record = fetchRecordByID($con, $modelID);
+
+    if ($record) {
+        // Populate the form fields with the fetched data
+        $modelName = $record["ModelName"];
+        $isActive = $record["Active"];
+        // You can then use these variables to populate the input fields in your HTML form
+    } else {
+        echo "Record not found";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -146,86 +202,64 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>Yes</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">View</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>Yes</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">View</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>Yes</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">View</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>Yes</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">View</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>Yes</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">View</button>
-                          </td>
-                        </tr>
-                      </tbody>
+                      <?php
+                      // Fetch records from the database
+                      $sql = "SELECT * FROM TractorModels";
+                      $result = $con->query($sql);
+
+                      if ($result->num_rows > 0) {
+                      $srNo = 1;
+                      while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $srNo++ . "</td>";
+                        echo "<td>" . $row["ModelName"] . "</td>";
+                        echo "<td>" . ($row["Active"] ? "Yes" : "No") . "</td>";
+                        echo "<td><form method='post'><input type='hidden' name='model_id' value='" . $row["ModelID"] . "'><button type='submit' name='view' class='btn btn-info btn-sm'>View</button></form></td>";
+                        echo "</tr>";
+                      }
+                    } else {
+                      echo "<tr><td colspan='4'>No records found</td></tr>";
+                    }
+                    ?>
+                    </tbody>
+              
                     </table>
 
-                    <form action="#" class="col-lg-5">
-                      <div class="user-details row">
-                        <div class="input-box col-md-6">
-                          <span class="details">Code:</span>
-                          <input type="text" />
-                        </div>
-                        <div class="form-check col-md-5 ms-5 mt-4 mb-4">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            checked
-                          />
-                          <label class="form-check-label"> isActive </label>
-                        </div>
-                      </div>
-                      <span class="h6">Model:</span>
-                      <div class="input-group input-box mt-1">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Enter tractor model"
-                        />
-                        <button
-                          class="btn btn-primary rounded-end me-3"
-                          type="button"
-                        >
-                          Update
-                        </button>
-                        <button
-                          class="btn btn-outline-secondary rounded"
-                          type="button"
-                        >
-                          Clear
-                        </button>
-                      </div>
-                    </form>
+                      <?php if(isset($modelName)): ?>
+                          <!-- Form to edit record -->
+                          <form class="col-lg-5" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                              <input type="hidden" name="model_id" value="<?php echo $modelID; ?>">
+                            <div class="user-details">
+                              <div class="input-box">
+                                  <label class="mb-2" for="modelName">Model Name:</label>
+                                  <input type="text" id="modelName" name="modelName" value="<?php echo $modelName; ?>">
+                              </div>
+                            </div>
+                              <div class="mt-4 mb-4">
+                                  <input type="checkbox" id="isActive" name="isActive" <?php echo $isActive ? 'checked' : ''; ?>>
+                                  <label for="isActive">Active</label>
+                              </div>
+                              <button class="btn btn-primary" type="submit" name="edit">Save</button>
+                              <button class="btn btn-secondary" type="button" onclick="clearForm()">Clear</button>
+                          </form>
+                        <?php else: ?>
+                          <!-- Form to add new record -->
+                          <form class="col-lg-5" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                            <div class="user-details">
+                              <div class="input-box">
+                                  <label class="mb-2" for="modelName">Model Name:</label>
+                                  <input type="text" id="modelName" name="modelName">
+                              </div>
+                            </div>
+                              <div class="mt-4 mb-4">
+                                  <input type="checkbox" id="isActive" name="isActive" checked>
+                                  <label for="isActive">Active</label>
+                              </div>
+                              <button class="btn btn-primary" type="submit" name="add">Add New</button>
+                              <button class="btn btn-secondary" type="button" onclick="clearForm()">Clear</button>
+                          </form>
+                      <?php endif; ?>
+
                   </div>
                 </section>
                 <!-- MODEL DETAILS TABLE ENDS -->

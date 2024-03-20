@@ -475,10 +475,16 @@ textarea {
 
 .btn-primary {
   background: rgb(30, 109, 30) !important;
+  border: none !important;
 }
 
 .btn-outline-secondary {
   background: rgb(169, 22, 22) !important;
+}
+
+.btn-custom {
+  background: rgb(30, 109, 30) !important;
+  border: 1px solid rgb(30, 109, 30) !important;
 }
 
 .check-container {

@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -124,7 +123,7 @@
             <p class="">Fill the form below to register a new tractor</p>
 
             <div class="content">
-              <form id="add-user-form" action="" method="POST">
+              <form action="" method="POST">
                 <div class="user-details">
                   <div class="input-box">
                       <span class="details">Tractor Number</span>
