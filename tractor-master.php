@@ -12,6 +12,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 // The user is authenticated and is an admin, continue to user-master page
+
+$sql = "SELECT * FROM Tractors";
+$result = mysqli_query($con, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -165,99 +168,50 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
                 <!-- TRACTOR DETAILS TABLE STARTS -->
                 <section id="table" class="container">
-                  <div class="row">
-                    <table class="content-table">
-                      <thead>
-                        <tr>
-                          <th>Sr. No</th>
-                          <th>Tractor Number</th>
-                          <th>Brand</th>
-                          <th>Model</th>
-                          <th>Horsepower</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>GA 1234</td>
-                          <td>Mahindra</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>30</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>GA 1234</td>
-                          <td>Mahindra</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>30</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>GA 1234</td>
-                          <td>Mahindra</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>30</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>GA 1234</td>
-                          <td>Mahindra</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>30</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>GA 1234</td>
-                          <td>Mahindra</td>
-                          <td>White Field Boss 4-210</td>
-                          <td>30</td>
-                          <td>
-                            <button class="btn btn-info btn-sm">Edit</button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-                <!-- TRACTOR DETAILS TABLE ENDS -->
-
-                <!-- Modal -->
-                <div
-                  class="modal fade"
-                  id="tractorModal"
-                  tabindex="-1"
-                  aria-labelledby="addNewTractor"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addNewTractor">
-                          Add New Tractor
-                        </h1>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <div class="row">
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>Sr. No</th>
+                    <th>Tractor Number</th>
+                    <th>Model/Brand</th>
+                    <th>Horsepower</th>
+                    <th>Serial Number</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $srNo = 1; // Initialize serial number counter
+                while ($row = mysqli_fetch_assoc($result)) {
+                ?>
+                    <tr>
+                        <td><?php echo $srNo++; ?></td>
+                        <td><?php echo $row['TractorNumber']; ?></td>
+                        <td>
+                            <?php
+                            // Fetch model/brand from TractorModels table based on ModelID
+                            $modelID = $row['ModelID'];
+                            $modelQuery = "SELECT ModelName FROM TractorModels WHERE ModelID = $modelID";
+                            $modelResult = mysqli_query($con, $modelQuery);
+                            $modelRow = mysqli_fetch_assoc($modelResult);
+                            echo $modelRow['ModelName'];
+                            ?>
+                        </td>
+                        <td><?php echo $row['Horsepower']; ?></td>
+                        <td><?php echo $row['SerialNumber']; ?></td>
+                        <td>
+                            <a href="update-tractor.php?id=<?php echo $row['TractorID']; ?>">
+                                <button class="btn btn-info btn-sm">Edit</button>
+                            </a>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</section>
+                <!-- TRACTOR DETAILS TABLE ENDS -->     
               </div>
             </div>
           </div>

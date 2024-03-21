@@ -1,3 +1,44 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the user is not authenticated or if the user is not an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    // Redirect the user to the login page or an unauthorized access page
+    header('Location: login.php'); // or header('Location: unauthorized.php');
+    exit(); // Stop further execution
+}
+
+// The user is authenticated and is an admin, continue to user-master page
+
+require 'config.php';
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $tractorNumber = $_POST['tractorNumber'];
+    $serialNumber = $_POST['serialNumber'];
+    $modelID = $_POST['tractorModel'];
+    $horsepower = $_POST['horsepower'];
+
+    // Insert data into the database
+    $sql = "INSERT INTO Tractors (TractorNumber, SerialNumber, ModelID, Horsepower) VALUES (?, ?, ?, ?)";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ssii", $tractorNumber, $serialNumber, $modelID, $horsepower);
+
+    if ($stmt->execute()) {
+        // Redirect to tractor-master.php
+        header('Location: tractor-master.php');
+        exit(); // Stop further execution after redirection
+    } else {
+        echo "Error adding new tractor: " . $stmt->error;
+    }
+
+    // Close the database connection
+    $con->close();
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -123,51 +164,40 @@
             <p class="">Fill the form below to register a new tractor</p>
 
             <div class="content">
-              <form action="" method="POST">
-                <div class="user-details">
-                  <div class="input-box">
-                      <span class="details">Tractor Number</span>
-                      <input
-                        type="text"
-                        placeholder="Enter tractor number"
-                         required
-                      />
-                  </div>
-                    <div class="input-box">
-                      <span class="details">Serial Number</span>
-                      <input
-                        type="text"
-                        placeholder="Enter serial number"
-                        required
-                      />
-                    </div>
-                    <div class="input-box">
-                      <span class="details">Tractor Model/Brand</span>
-                      <select name="" id="">
-                          <option value="defaultSelect">
-                          Select type of model
-                          </option>
-                          <option value="mahindra">Mahindra</option>
-                          <option value="holland">
-                           New Holland
-                          </option>
-                         <option value="horse">Wheel Horse</option>
-                      </select>
-                    </div>
-                    <div class="input-box">
-                      <span class="details">Horsepower</span>
-                      <input type="number" required />
-                    </div>               
-      
-                    
-                    <div class="addNewButton mt-5 ms-auto">
-                      <button
-                        type="button"
-                        class="btn btn-primary pt-2 ps-5 pe-5 pb-2">
-                        Save
-                      </button>
-                    </div>             
-              </form>
+           <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+        <div class="user-details">
+            <div class="input-box">
+                <span class="details">Tractor Number</span>
+                <input type="text" name="tractorNumber" placeholder="Enter tractor number" required>
+            </div>
+            <div class="input-box">
+                <span class="details">Serial Number</span>
+                <input type="text" name="serialNumber" placeholder="Enter serial number" required>
+            </div>
+            <div class="input-box">
+                <span class="details">Tractor Model/Brand</span>
+                <select name="tractorModel" required>
+                    <option value="" disabled selected>Select type of model</option>
+                    <?php
+                    // Populate the dropdown menu with tractor models fetched from the database
+                    require 'config.php'; // Include database configuration file
+                    $sql = "SELECT * FROM TractorModels";
+                    $result = mysqli_query($con, $sql);
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<option value='" . $row['ModelID'] . "'>" . $row['ModelName'] . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="input-box">
+                <span class="details">Horsepower</span>
+                <input type="number" name="horsepower" required>
+            </div>
+            <div class="addNewButton mt-5 ms-auto">
+                <button type="submit" class="btn btn-primary pt-2 ps-5 pe-5 pb-2">Save</button>
+            </div>
+        </div>
+    </form>
             </div>
           </div>
         </div>

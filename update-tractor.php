@@ -1,6 +1,4 @@
 <?php
-require 'config.php';
-
 // Start the session
 session_start();
 
@@ -11,47 +9,50 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     exit(); // Stop further execution
 }
 
-// The user is authenticated and is an admin, continue to user-master page
+require 'config.php';
 
-// Check if the form is submitted for generating the report
-if (isset($_POST['generate_report'])) {
-    // Include necessary files and configurations
-    require_once('tcpdf/tcpdf.php');
+// Check if tractor ID is provided in the URL
+if (isset($_GET['id'])) {
+    $tractorID = $_GET['id'];
 
-    // Write SQL query to fetch data
-    $sql = "SELECT TractorNumber, ModelName, SerialNumber, Horsepower FROM Tractors JOIN TractorModels ON Tractors.ModelID = TractorModels.ModelID";
+    // Fetch tractor details from the database
+    $sql = "SELECT * FROM Tractors WHERE TractorID = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $tractorID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $tractor = $result->fetch_assoc();
 
-    // Execute the query
-    $result = mysqli_query($con, $sql);
-
-    // Create new PDF document
-    $pdf = new TCPDF();
-
-    // Add a page
-    $pdf->AddPage();
-
-    // Set font
-    $pdf->SetFont('helvetica', '', 12);
-
-    // Header
-    $pdf->Cell(0, 10, 'Tractor Report', 0, 1, 'C');
-
-    // Table header
-    $pdf->Cell(30, 10, 'Tractor Number', 1, 0, 'C');
-    $pdf->Cell(50, 10, 'Model', 1, 0, 'C');
-    $pdf->Cell(40, 10, 'Serial Number', 1, 0, 'C');
-    $pdf->Cell(30, 10, 'Horsepower', 1, 1, 'C');
-
-    // Fetch and output data
-    while ($row = mysqli_fetch_assoc($result)) {
-        $pdf->Cell(30, 10, $row['TractorNumber'], 1, 0, 'C');
-        $pdf->Cell(50, 10, $row['ModelName'], 1, 0, 'C');
-        $pdf->Cell(40, 10, $row['SerialNumber'], 1, 0, 'C');
-        $pdf->Cell(30, 10, $row['Horsepower'], 1, 1, 'C');
+    // Check if tractor exists
+    if (!$tractor) {
+        echo "Tractor not found";
+        exit();
     }
 
-    // Output the PDF to the browser
-    $pdf->Output('tractor_report.pdf', 'D');
+    // Fetch tractor models from the database
+    $tractorModelsQuery = "SELECT * FROM TractorModels";
+    $tractorModelsResult = mysqli_query($con, $tractorModelsQuery);
+}
+
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $tractorNumber = $_POST['tractorNumber'];
+    $serialNumber = $_POST['serialNumber'];
+    $modelID = $_POST['tractorModel'];
+    $horsepower = $_POST['horsepower'];
+
+    // Update data in the database
+    $sql = "UPDATE Tractors SET TractorNumber = ?, SerialNumber = ?, ModelID = ?, Horsepower = ? WHERE TractorID = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("ssiii", $tractorNumber, $serialNumber, $modelID, $horsepower, $tractorID);
+    if ($stmt->execute()) {
+        // Redirect to tractor-master.php after successful update
+        header('Location: tractor-master.php');
+        exit();
+    } else {
+        echo "Error updating tractor: " . $stmt->error;
+    }
 }
 ?>
 
@@ -60,13 +61,13 @@ if (isset($_POST['generate_report'])) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- Boxicons -->
     <link
       href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
       rel="stylesheet"
     />
 
-    <!-- My CSS -->
     <link rel="stylesheet" href="assets/css/style.css" />
 
     <!-- Boostrap CDN -->
@@ -75,6 +76,7 @@ if (isset($_POST['generate_report'])) {
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css
 "
     />
+
     <title>Admin Hub</title>
   </head>
   <body>
@@ -140,6 +142,8 @@ if (isset($_POST['generate_report'])) {
     </ul>
   </section>
     <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
     <section id="content">
       <!-- NAVBAR -->
       <nav>
@@ -156,29 +160,72 @@ if (isset($_POST['generate_report'])) {
       </nav>
       <!-- NAVBAR -->
 
-      <div id="page1" class="container page">
+      <div class="container">
         <div class="jumbotron text-center">
           <h1 class="display-4">TRACTOR MANAGEMENT SYSTEM</h1>
           <p class="lead">Efficiently manage your tractor fleet with ease.</p>
         </div>
+
+        <div id="signUp" class="pt-4 pb-4">
+          <div class="signup-container shadow">
+            <div class="mb-3">
+              <a href="tractor-master.php">
+                <button class="btn btn-secondary ps-3 pe-3 mb-4">
+                  <i class="bx bxs-chevrons-left"></i>
+                  Tractor List
+                </button></a
+              >
+            </div>
+            <div class="title">EDIT TRACTOR FORM</div>
+
+            <div class="content">
+            <form action="update-tractor.php?id=<?php echo $tractor['TractorID']; ?>" method="POST">
+    <div class="user-details">
+        <div class="input-box">
+            <span class="details">Tractor Number</span>
+            <input type="text" name="tractorNumber" value="<?php echo $tractor['TractorNumber']; ?>" required>
+        </div>
+        <div class="input-box">
+            <span class="details">Serial Number</span>
+            <input type="text" name="serialNumber" value="<?php echo $tractor['SerialNumber']; ?>" required>
+        </div>
+        <div class="input-box">
+            <span class="details">Tractor Model/Brand</span>
+            <select name="tractorModel" required>
+                <option value="" disabled>Select type of model</option>
+                <?php
+                while ($row = mysqli_fetch_assoc($tractorModelsResult)) {
+                    // Check if the current row's model ID matches the tractor's model ID
+                    $selected = ($row['ModelID'] == $tractor['ModelID']) ? 'selected' : '';
+                    echo "<option value='" . $row['ModelID'] . "' $selected>" . $row['ModelName'] . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <div class="input-box">
+            <span class="details">Horsepower</span>
+            <input type="number" name="horsepower" value="<?php echo $tractor['Horsepower']; ?>" required>
+        </div>
+        <div class="addNewButton mt-5 ms-auto">
+            <button type="submit" class="btn btn-primary pt-2 ps-5 pe-5 pb-2">Save</button>
+        </div>
+    </div>
+</form>
+            </div>
+          </div>
+        </div>
+        <!-- INPUT MODAL DETAILS FOR USER ENDS -->
       </div>
-
-      <div class="container"><h4>Reports</h4></div>
-
-         <!-- Form to generate report -->
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-        <button type="submit" name="generate_report">Generate PDF Report</button>
-    </form>
-
-      
     </section>
-
     <!-- CONTENT -->
 
-    <script src="assets/js/script.js"></script>
 
-    <!-- Bootstrap js CDN -->
+    <!-- Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js
 "></script>
+
+    <!-- Link to custom JS file -->
+    <script src="assets/js/script.js"></script>
+
   </body>
 </html>
