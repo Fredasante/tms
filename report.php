@@ -11,47 +11,94 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     exit(); // Stop further execution
 }
 
-// The user is authenticated and is an admin, continue to user-master page
+// Include the TCPDF library
+require_once('tcpdf/tcpdf.php');
+
+// Initialize variable to hold PDF content
+$pdf_content = '';
 
 // Check if the form is submitted for generating the report
 if (isset($_POST['generate_report'])) {
-    // Include necessary files and configurations
-    require_once('tcpdf/tcpdf.php');
-
     // Write SQL query to fetch data
     $sql = "SELECT TractorNumber, ModelName, SerialNumber, Horsepower FROM Tractors JOIN TractorModels ON Tractors.ModelID = TractorModels.ModelID";
 
     // Execute the query
     $result = mysqli_query($con, $sql);
 
-    // Create new PDF document
-    $pdf = new TCPDF();
+    if ($result) {
+        // Create new PDF document
+        $pdf = new TCPDF();
 
-    // Add a page
-    $pdf->AddPage();
+        // Add a page
+        $pdf->AddPage();
 
-    // Set font
-    $pdf->SetFont('helvetica', '', 12);
+        // Set background color and text color for the title
+        $pdf->SetFillColor(13, 34, 90); // Background color
+        $pdf->SetTextColor(255, 255, 255); // Text color
 
-    // Header
-    $pdf->Cell(0, 10, 'Tractor Report', 0, 1, 'C');
+        // Set font for the title
+        $pdf->SetFont('helvetica', 'B', 20);
 
-    // Table header
-    $pdf->Cell(30, 10, 'Tractor Number', 1, 0, 'C');
-    $pdf->Cell(50, 10, 'Model', 1, 0, 'C');
-    $pdf->Cell(40, 10, 'Serial Number', 1, 0, 'C');
-    $pdf->Cell(30, 10, 'Horsepower', 1, 1, 'C');
+        // Title
+        $pdf->Cell(0, 15, 'Tractor Management System Report', 0, 1, 'C', true); // Title
 
-    // Fetch and output data
-    while ($row = mysqli_fetch_assoc($result)) {
-        $pdf->Cell(30, 10, $row['TractorNumber'], 1, 0, 'C');
-        $pdf->Cell(50, 10, $row['ModelName'], 1, 0, 'C');
-        $pdf->Cell(40, 10, $row['SerialNumber'], 1, 0, 'C');
-        $pdf->Cell(30, 10, $row['Horsepower'], 1, 1, 'C');
+        // Reset text color to black
+        $pdf->SetTextColor(0, 0, 0); // Black color
+
+        // Set font for the descriptive text
+        $pdf->SetFont('helvetica', '', 12);
+
+        // Descriptive Text
+        $pdf->Cell(0, 10, 'This report contains information about tractors in the management system.', 0, 1, 'C'); // Descriptive text
+        $pdf->Ln(5); // Add space of 5 units
+
+        // Include HTML table structure with classes and styles
+        $html = '
+            <section id="table" class="container">
+                <div class="row">
+                    <table class="content-table" border="1" cellspacing="0" cellpadding="8">
+                        <thead style="background-color: #f2f2f2;">
+                            <tr style="background-color: #e6eaed;">
+                                <th>Sr. No</th>
+                                <th>Tractor Number</th>
+                                <th>Model/Brand</th>
+                                <th>Horsepower</th>
+                                <th>Serial Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>';
+
+        // Fetch and output data
+        $counter = 1;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $html .= '<tr>';
+            $html .= '<td>' . $counter . '</td>';
+            $html .= '<td>' . $row['TractorNumber'] . '</td>';
+            $html .= '<td>' . $row['ModelName'] . '</td>';
+            $html .= '<td>' . $row['Horsepower'] . '</td>';
+            $html .= '<td>' . $row['SerialNumber'] . '</td>';
+            $html .= '</tr>';
+            $counter++;
+        }
+
+        $html .= '
+                        </tbody>
+                    </table>
+                </div>
+            </section>';
+
+        // Write HTML content to PDF
+        $pdf->writeHTML($html, true, false, false, false, '');
+
+        // Get the PDF content
+        $pdf_content = $pdf->Output('', 'S');
+    } else {
+        // Handle database query error
+        echo "Error: " . mysqli_error($con);
     }
 
-    // Output the PDF to the browser
-    $pdf->Output('tractor_report.pdf', 'D');
+    // Close database connection
+    mysqli_close($con);
 }
 ?>
 
@@ -163,12 +210,31 @@ if (isset($_POST['generate_report'])) {
         </div>
       </div>
 
-      <div class="container"><h4>Reports</h4></div>
+      <div class="container">
+        <h4>REPORTS</h4>
 
-         <!-- Form to generate report -->
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-        <button type="submit" name="generate_report">Generate PDF Report</button>
-    </form>
+        <div class="card mt-4">
+        <div class="card-header">
+          Featured Report
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Tractor Management Report</h5>
+          <p class="card-text">Click on the button below to generate report for tractor usage.</p>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                  <button type="submit" class="btn btn-info" name="generate_report">Generate PDF Report</button>
+              </form>
+        </div>
+        </div>
+     
+        <!-- Preview the PDF within an iframe -->
+        <?php if ($pdf_content): ?>
+            <h2>Preview</h2>
+            <iframe src="data:application/pdf;base64,<?php echo base64_encode($pdf_content); ?>"></iframe>
+        <?php endif; ?>
+
+      </div>
+
+
 
       
     </section>

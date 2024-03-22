@@ -168,49 +168,49 @@ $result = mysqli_query($con, $sql);
 
                 <!-- TRACTOR DETAILS TABLE STARTS -->
                 <section id="table" class="container">
-    <div class="row">
-        <table class="content-table">
-            <thead>
-                <tr>
-                    <th>Sr. No</th>
-                    <th>Tractor Number</th>
-                    <th>Model/Brand</th>
-                    <th>Horsepower</th>
-                    <th>Serial Number</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $srNo = 1; // Initialize serial number counter
-                while ($row = mysqli_fetch_assoc($result)) {
-                ?>
-                    <tr>
-                        <td><?php echo $srNo++; ?></td>
-                        <td><?php echo $row['TractorNumber']; ?></td>
-                        <td>
-                            <?php
-                            // Fetch model/brand from TractorModels table based on ModelID
-                            $modelID = $row['ModelID'];
-                            $modelQuery = "SELECT ModelName FROM TractorModels WHERE ModelID = $modelID";
-                            $modelResult = mysqli_query($con, $modelQuery);
-                            $modelRow = mysqli_fetch_assoc($modelResult);
-                            echo $modelRow['ModelName'];
-                            ?>
-                        </td>
-                        <td><?php echo $row['Horsepower']; ?></td>
-                        <td><?php echo $row['SerialNumber']; ?></td>
-                        <td>
-                            <a href="update-tractor.php?id=<?php echo $row['TractorID']; ?>">
-                                <button class="btn btn-info btn-sm">Edit</button>
-                            </a>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    </div>
-</section>
+                    <div class="row">
+                        <table class="content-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No</th>
+                                    <th>Tractor Number</th>
+                                    <th>Model/Brand</th>
+                                    <th>Horsepower</th>
+                                    <th>Serial Number</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $srNo = 1; // Initialize serial number counter
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                ?>
+                                    <tr>
+                                        <td><?php echo $srNo++; ?></td>
+                                        <td><?php echo $row['TractorNumber']; ?></td>
+                                        <td>
+                                            <?php
+                                            // Fetch model/brand from TractorModels table based on ModelID
+                                            $modelID = $row['ModelID'];
+                                            $modelQuery = "SELECT ModelName FROM TractorModels WHERE ModelID = $modelID";
+                                            $modelResult = mysqli_query($con, $modelQuery);
+                                            $modelRow = mysqli_fetch_assoc($modelResult);
+                                            echo $modelRow['ModelName'];
+                                            ?>
+                                        </td>
+                                        <td><?php echo $row['Horsepower']; ?></td>
+                                        <td><?php echo $row['SerialNumber']; ?></td>
+                                        <td>
+                                            <a href="update-tractor.php?id=<?php echo $row['TractorID']; ?>">
+                                                <button class="btn btn-info btn-sm">Edit</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
                 <!-- TRACTOR DETAILS TABLE ENDS -->     
               </div>
             </div>

@@ -735,3 +735,10 @@ form input[type="radio"] {
   font-weight: bold;
   border-radius: 6px;
 }
+
+/* reports */
+iframe {
+  width: 100% !important;
+  height: 600px !important; /* Increase the height to make the preview larger */
+  border: 1px solid #ccc;
+}
