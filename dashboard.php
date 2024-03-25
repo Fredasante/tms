@@ -110,7 +110,7 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
             </a>
         </li>
         <li>
-            <a href="daily-work" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work') !== false) echo 'class="active"'; ?>>
+            <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
                 <i class="bx bxs-group"></i>
                 <span class="text">Daily Work</span>
             </a>

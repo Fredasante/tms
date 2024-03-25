@@ -131,20 +131,7 @@ session_start();
                   <h2>VIEW DAILY WORK</h2>
                   <div class="row">
                     <div class="col-lg-6 mt-4">
-                      <div class="filter-container">
-                        <label class="mt-1">From:</label>
-                        <input type="date" class="date-input ms-2 me-2" />
-                        <label class="mt-1">To:</label>
-                        <input type="date" class="date-input ms-2 me-2" />
-                        <div class="altBtn col-lg-2">
-                          <button
-                            type="button"
-                            class="btn btn-secondary rounded ms-1 mb-2"
-                          >
-                            Filter
-                          </button>
-                        </div>
-                      </div>
+                      
                     </div>
                     <div class="col-lg-4 mt-4">
                       <div class="input-group mb-3">
@@ -161,14 +148,15 @@ session_start();
 
                     <!-- Button trigger modal for adding daily work -->
                     <div class="addNewButton col-lg-2 mt-4">
+                      <a href="add-work.php">
                       <button
                         type="button"
                         class="btn btn-secondary rounded me-3 mb-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#userModal"
                       >
-                        Add New
+                      <i class='bx bx-notepad me-2'></i>
+                        Add Work
                       </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -184,6 +172,7 @@ session_start();
                           <th>Hours Used</th>
                           <th>Area Covered (m)</th>
                           <th>Tractor Number</th>
+                          <th>Edit</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -193,124 +182,14 @@ session_start();
                           <td>5</td>
                           <td>2000</td>
                           <td>112233</td>
+                          <td><a href="update-work.php"><button class="btn btn-info">View</button></td></a>
                         </tr>
-                        <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
-                        </tr>                  
+                                     
                       </tbody>
                     </table>
                   </div>
                 </section>
-                <!-- USER DETAILS TABLE ENDS -->
-
-                <!-- Modal for adding daily work  activity-->
-                <div
-                  class="modal fade"
-                  id="userModal"
-                  tabindex="-1"
-                  aria-labelledby="addNewUser"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addNewUser">
-                          Add New Task
-                        </h1>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div class="modal-body">
-                        <!-- INPUT MODAL DETAILS FOR TASK STARTS -->
-                        <div id="signUp">
-                          <div class="signup-container">
-                            <div class="title">DAILY WORK</div>
-                            <p class="">
-                              Fill in the details below to record daily work
-                              activity.
-                            </p>
-                            <div class="content">
-                              <form action="#">
-                                <div class="user-details">
-                                  <div class="input-box">
-                                    <span class="details"
-                                      >Start Date & Time:</span
-                                    >
-                                    <input type="datetime-local" required />
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details"
-                                      >End Date & Time:</span
-                                    >
-                                    <input type="datetime-local" required />
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Tractor Number</span>
-                                    <input
-                                      type="text"
-                                      placeholder="Enter Tractor Number"
-                                      required
-                                    />
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details">Task</span>
-                                    <select name="" id="">
-                                      <option value="">Plowing</option>
-                                      <option value="">Land Clearing</option>
-                                      <option value="">Construction</option>
-                                      <option value="">Harvesting</option>
-                                      <option value="">Cultivating</option>
-                                    </select>
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Hours Used:</span>
-                                    <input type="number" required />
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details">Area Covered:</span>
-                                    <input type="number" required />
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Note:</span>
-                                    <textarea
-                                      cols="83"
-                                      rows="4"
-                                      placeholder="Enter message"
-                                      class="p-2"
-                                    ></textarea>
-                                  </div>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- INPUT MODAL DETAILS FOR TASK ENDS -->
-                      </div>
-
-                      <div class="modal-footer me-5">
-                        <div class="addNewButton">
-                          <button
-                            type="button"
-                            class="btn btn-primary pt-2 ps-5 pe-5 pb-2"
-                          >
-                            Save
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <!-- USER DETAILS TABLE ENDS -->             
               </div>
             </div>
           </div>

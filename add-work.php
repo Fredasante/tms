@@ -95,8 +95,6 @@ session_start();
         </li>
     </ul>
   </section>
-
-
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->
@@ -124,115 +122,14 @@ session_start();
 
         <!-- User Section -->
         <div>
-          <div class="row">
-            <div>
-              <div class="card">
-                <div class="card-header">
-                  <h2>VIEW DAILY WORK</h2>
-                  <div class="row">
-                    <div class="col-lg-6 mt-4">
-                      <div class="filter-container">
-                        <label class="mt-1">From:</label>
-                        <input type="date" class="date-input ms-2 me-2" />
-                        <label class="mt-1">To:</label>
-                        <input type="date" class="date-input ms-2 me-2" />
-                        <div class="altBtn col-lg-2">
-                          <button
-                            type="button"
-                            class="btn btn-secondary rounded ms-1 mb-2"
-                          >
-                            Filter
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-4 mt-4">
-                      <div class="input-group mb-3">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Search.."
-                        />
-                        <button class="btn btn-secondary" type="button">
-                          Find
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- Button trigger modal for adding daily work -->
-                    <div class="addNewButton col-lg-2 mt-4">
-                      <button
-                        type="button"
-                        class="btn btn-secondary rounded me-3 mb-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#userModal"
-                      >
-                        Add New
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- USER DETAILS TABLE STARTS -->
-                <section id="table" class="container">
-                  <div class="row">
-                    <table class="content-table">
-                      <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th>Task</th>
-                          <th>Hours Used</th>
-                          <th>Area Covered (m)</th>
-                          <th>Tractor Number</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
-                        </tr>
-                        <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
-                        </tr>                  
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-                <!-- USER DETAILS TABLE ENDS -->
-
-                <!-- Modal for adding daily work  activity-->
-                <div
-                  class="modal fade"
-                  id="userModal"
-                  tabindex="-1"
-                  aria-labelledby="addNewUser"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addNewUser">
-                          Add New Task
-                        </h1>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div class="modal-body">
-                        <!-- INPUT MODAL DETAILS FOR TASK STARTS -->
-                        <div id="signUp">
-                          <div class="signup-container">
-                            <div class="title">DAILY WORK</div>
+          <div id="signUp">
+            <div class="signup-container">
+              <a href="work-master.php">
+                <button class="mb-4 btn btn-secondary"><i class='bx bx-chevrons-left me-2'></i>
+                Back
+                </button>
+              </a>
+              <div class="title">DAILY WORK</div>
                             <p class="">
                               Fill in the details below to record daily work
                               activity.
@@ -255,16 +152,16 @@ session_start();
 
                                   <div class="input-box">
                                     <span class="details">Tractor Number</span>
-                                    <input
-                                      type="text"
-                                      placeholder="Enter Tractor Number"
-                                      required
-                                    />
+                                    <select name="" id="">
+                                      <option value="">--Select Tractor Number--</option>
+                                      <option value="">112</option>
+                                      <option value="">223</option>
+                                    </select>
                                   </div>
                                   <div class="input-box">
                                     <span class="details">Task</span>
                                     <select name="" id="">
-                                      <option value="">Plowing</option>
+                                      <option value="">--Select Task--</option>
                                       <option value="">Land Clearing</option>
                                       <option value="">Construction</option>
                                       <option value="">Harvesting</option>
@@ -291,29 +188,18 @@ session_start();
                                     ></textarea>
                                   </div>
                                 </div>
+
+                              <div class="addNewButton mt-4">
+                                <button
+                                class="btn btn-secondary rounded me-3 mb-2 px-4 py-2"
+                              >
+                               Save
+                              </button>
+                            </div>
                               </form>
                             </div>
-                          </div>
-                        </div>
-                        <!-- INPUT MODAL DETAILS FOR TASK ENDS -->
-                      </div>
-
-                      <div class="modal-footer me-5">
-                        <div class="addNewButton">
-                          <button
-                            type="button"
-                            class="btn btn-primary pt-2 ps-5 pe-5 pb-2"
-                          >
-                            Save
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
-            </div>
-          </div>
+          </div>  
         </div>
       </div>
     </section>
