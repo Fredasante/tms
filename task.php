@@ -82,9 +82,6 @@ if (isset($_POST['view'])) {
 }
 ?>
 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -113,7 +110,7 @@ if (isset($_POST['view'])) {
   <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">Admin Master</span>
+        <span class="text">Admin Hub</span>
     </a>
     <ul class="side-menu top">
         <li>

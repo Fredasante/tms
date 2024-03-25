@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">Admin Master</span>
+        <span class="text">Admin Hub</span>
     </a>
     <ul class="side-menu top">
         <li>
@@ -197,7 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit" class="btn btn-primary pt-2 ps-5 pe-5 pb-2">Save</button>
             </div>
         </div>
-    </form>
+      </form>
             </div>
           </div>
         </div>
