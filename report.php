@@ -126,7 +126,7 @@ if (isset($_POST['generate_report'])) {
   </head>
   <body>
     <!-- SIDEBAR -->
-  <section id="sidebar">
+ <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
         <span class="text">Admin Hub</span>
@@ -169,9 +169,15 @@ if (isset($_POST['generate_report'])) {
             </a>
         </li>
         <li>
+          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
+              <i class="bx bx-task"></i>
+              <span class="text">Work Master</span>
+          </a>
+        </li>
+        <li>
             <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
-                <i class="bx bxs-group"></i>
-                <span class="text">Daily Work</span>
+              <i class="bx bxs-group"></i>
+              <span class="text">Daily Work</span>
             </a>
         </li>
     </ul>
@@ -185,7 +191,7 @@ if (isset($_POST['generate_report'])) {
             </form>
         </li>
     </ul>
-  </section>
+</section>
     <!-- SIDEBAR -->
     <section id="content">
       <!-- NAVBAR -->

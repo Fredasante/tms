@@ -75,6 +75,12 @@ session_start();
                         <span class="text">Task Master</span>
                     </a>
                 </li>
+                <li>
+                    <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
+                        <i class="bx bx-task"></i>
+                        <span class="text">Work Master</span>
+                    </a>
+                </li>
             <?php endif; ?>
             <li>
                 <a href="daily-work.php" <?php if (basename($_SERVER['PHP_SELF']) == 'daily-work.php') echo 'class="active"'; ?>>

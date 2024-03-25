@@ -108,6 +108,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </a>
         </li>
         <li>
+          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
+              <i class="bx bx-task"></i>
+              <span class="text">Work Master</span>
+          </a>
+        </li>
+        <li>
             <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
                 <i class="bx bxs-group"></i>
                 <span class="text">Daily Work</span>

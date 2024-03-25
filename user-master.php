@@ -39,7 +39,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
   </head>
   <body>
     <!-- SIDEBAR -->
-  <section id="sidebar">
+    <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
         <span class="text">Admin Hub</span>
@@ -80,6 +80,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                 <i class="bx bx-task"></i>
                 <span class="text">Task Master</span>
             </a>
+        </li>
+        <li>
+          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
+              <i class="bx bx-task"></i>
+              <span class="text">Work Master</span>
+          </a>
         </li>
         <li>
             <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>

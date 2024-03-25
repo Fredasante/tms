@@ -110,7 +110,7 @@ if (isset($_POST['submit'])) {
   </head>
   <body>
     <!-- SIDEBAR -->
-  <section id="sidebar">
+<section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
         <span class="text">Admin Hub</span>
@@ -153,9 +153,15 @@ if (isset($_POST['submit'])) {
             </a>
         </li>
         <li>
+          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
+              <i class="bx bx-task"></i>
+              <span class="text">Work Master</span>
+          </a>
+        </li>
+        <li>
             <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
-                <i class="bx bxs-group"></i>
-                <span class="text">Daily Work</span>
+              <i class="bx bxs-group"></i>
+              <span class="text">Daily Work</span>
             </a>
         </li>
     </ul>
@@ -169,7 +175,112 @@ if (isset($_POST['submit'])) {
             </form>
         </li>
     </ul>
-  </section>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+      <!-- NAVBAR -->
+      <nav>
+        <i class="bx bx-menu"></i>
+        <a href="#" class="nav-link">Categories</a>
+        <form action="#">
+          <div class="form-input">
+            <input type="search" placeholder="Search..." />
+            <button type="submit" class="search-btn">
+              <i class="bx bx-search"></i>
+            </button>
+          </div>
+        </form>
+      </nav>
+      <!-- NAVBAR -->
+
+      <div id="tractorMaster" class="container">
+        <div class="jumbotron text-center">
+          <h1 class="display-4">TRACTOR MANAGEMENT SYSTEM</h1>
+          <p class="lead">Efficiently manage your tractor fleet with ease.</p>
+        </div>
+
+        <!-- Tractors Section -->
+        <div>
+          <div class="row">
+            <div>
+              <div class="card">
+                <div class="card-header">
+                  <h2>TASKS</h2>
+                </div>
+
+                <!-- MODEL DETAILS TABLE STARTS -->
+             <section id="task-master" class="container">
+    <div class="row p-2 gap-5">
+        <table class="content-table col-lg-6">
+            <thead>
+                <tr>
+                    <th>Sr. No</th>
+                    <th>Task Name</th>
+                    <th>Active</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Fetch records from the database
+                $sql = "SELECT * FROM tasks";
+                $result = $con->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row["id"] . "</td>";
+                        echo "<td>" . $row["task_name"] . "</td>";
+                        echo "<td>" . ($row["active"] ? "Yes" : "No") . "</td>";
+                        echo "<td><form method='post'><input type='hidden' name='task_id' value='" . $row["id"] . "'><button type='submit' name='view' class='btn btn-info btn-sm'>View</button></form></td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>No records found</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+
+        <?php if (isset($taskName)) : ?>
+            <!-- Form to edit task -->
+            <form class="col-lg-5" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <input type="hidden" name="task_id" value="<?php echo $taskID; ?>">
+                <div class="user-details">
+                    <div class="input-box">
+                        <label class="mb-2" for="taskName">Task Name:</label>
+                        <input type="text" id="taskName" name="task_name" value="<?php echo $taskName; ?>">
+                    </div>
+                </div>
+                <div class="mt-4 mb-4">
+                    <input type="checkbox" id="isActive" name="is_active" <?php echo $isActive ? 'checked' : ''; ?>>
+                    <label for="isActive">Active</label>
+                </div>
+                <button class="btn btn-primary" type="submit" name="edit">Save</button>
+                <button class="btn btn-secondary" type="button" onclick="clearForm()">Clear</button>
+            </form>
+        <?php else : ?>
+            <!-- Form to add new task -->
+            <form class="col-lg-5" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <div class="user-details">
+                    <div class="input-box">
+                        <label class="mb-2" for="taskName">Task Name:</label>
+                        <input type="text" id="taskName" name="task_name">
+                    </div>
+                </div>
+                <div class="mt-4 mb-4">
+                    <input type="checkbox" id="isActive" name="is_active" checked>
+                    <label for="isActive">Active</label>
+                </div>
+                <button class="btn btn-primary" type="submit" name="add">Add New</button>
+                <button class="btn btn-secondary" type="button" onclick="clearForm()">Clear</button>
+            </form>
+        <?php endif; ?>
+
+    </div>
+</section>
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->

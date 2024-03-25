@@ -34,55 +34,57 @@ session_start();
   <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">User Hub</span>
+        <span class="text">Admin Hub</span>
     </a>
     <ul class="side-menu top">
-        <?php if (isset($_SESSION['user_id'])): // Check if user is authenticated ?>
-            <?php if ($_SESSION['user_type'] === 'admin'): ?>
-                <li>
-                    <a href="dashboard.php" <?php if (basename($_SERVER['PHP_SELF']) == 'dashboard.php') echo 'class="active"'; ?>>
-                        <i class='bx bxs-dashboard'></i>
-                        <span class="text">Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="user-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'user-master.php') echo 'class="active"'; ?>>
-                        <i class="bx bxs-user-account"></i>
-                        <span class="text">User Master</span>
-                    </a>
-                </li>
-                <li>
-                  <a href="tractor-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'tractor-master.php') !== false) echo 'class="active"'; ?>>
-                      <i class='bx bxs-car-wash' ></i>
-                      <span class="text">Tractor Master</span>
-                  </a>
-                </li>
-                <li>
-                    <a href="model.php" <?php if (basename($_SERVER['PHP_SELF']) == 'model.php') echo 'class="active"'; ?>>
-                        <i class="bx bxs-package"></i>
-                        <span class="text">Model Master</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="report.php" <?php if (basename($_SERVER['PHP_SELF']) == 'report.php') echo 'class="active"'; ?>>
-                        <i class="bx bxs-report"></i>
-                        <span class="text">Reports</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="task.php" <?php if (basename($_SERVER['PHP_SELF']) == 'task.php') echo 'class="active"'; ?>>
-                        <i class="bx bx-task"></i>
-                        <span class="text">Task Master</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-            <li>
-                <a href="daily-work.php" <?php if (basename($_SERVER['PHP_SELF']) == 'daily-work.php') echo 'class="active"'; ?>>
-                    <i class="bx bxs-group"></i>
-                    <span class="text">Daily Work</span>
-                </a>
-            </li>
-        <?php endif; ?>
+        <li>
+            <a href="dashboard.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'dashboard.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="user-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'user-master.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-user-account"></i>
+                <span class="text">User Master</span>
+            </a>
+        </li>
+        <li>
+            <a href="tractor-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'tractor-master.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-car-wash' ></i>
+                <span class="text">Tractor Master</span>
+            </a>
+        </li>
+        <li>
+            <a href="model.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'model.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-package"></i>
+                <span class="text">Model Master</span>
+            </a>
+        </li>
+        <li>
+            <a href="report.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'report.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-report"></i>
+                <span class="text">Reports</span>
+            </a>
+        </li>
+        <li>
+            <a href="task.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'task.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bx-task"></i>
+                <span class="text">Task Master</span>
+            </a>
+        </li>
+        <li>
+          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
+              <i class="bx bx-task"></i>
+              <span class="text">Work Master</span>
+          </a>
+        </li>
+        <li>
+            <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-group"></i>
+                <span class="text">Daily Work</span>
+            </a>
+        </li>
     </ul>
     <ul class="side-menu">
         <li>
