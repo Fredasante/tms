@@ -1,5 +1,18 @@
 <?php
+// Include configuration file
 require 'config.php';
+
+// Start session
+session_start();
+
+// Check if the user is authenticated and is an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    // Redirect to the login page or an unauthorized access page
+    header('Location: login.php'); // or header('Location: unauthorized.php');
+    exit(); // Stop further execution
+}
+
+// User is authenticated and is an admin, continue to admin-dashboard page
 
 // Function to fetch record by ID from the database
 function fetchRecordByID($conn, $modelID) {
