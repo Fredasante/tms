@@ -113,7 +113,7 @@ if (isset($_POST['submit'])) {
   </head>
   <body>
     <!-- SIDEBAR -->
-  <section id="sidebar">
+ <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
         <span class="text">Admin Hub</span>
@@ -156,15 +156,15 @@ if (isset($_POST['submit'])) {
             </a>
         </li>
         <li>
-          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
-              <i class="bx bx-task"></i>
-              <span class="text">Work Master</span>
+          <a href="task.php" <?php if (basename($_SERVER['PHP_SELF']) == 'task.php') echo 'class="active"'; ?>>
+            <i class="bx bx-task"></i>
+            <span class="text">Work Master</span>
           </a>
         </li>
         <li>
             <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
-              <i class="bx bxs-group"></i>
-              <span class="text">Daily Work</span>
+                <i class="bx bxs-group"></i>
+                <span class="text">Daily Work</span>
             </a>
         </li>
     </ul>

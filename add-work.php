@@ -1,10 +1,59 @@
-<?php 
+<?php
+include 'config.php';
 
-require 'config.php';
+// Fetch tractor numbers from the database
+$query = "SELECT TractorID, TractorNumber FROM tractors";
+$result = mysqli_query($con, $query);
+$tractor_numbers = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-session_start();
+// Fetch tasks from the database
+$query = "SELECT id, task_name FROM tasks WHERE active = 1"; // Assuming 'active' column indicates active tasks
+$result = mysqli_query($con, $query);
+$tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $start_datetime = $_POST['start_datetime'];
+    $end_datetime = $_POST['end_datetime'];
+    $tractor_number = $_POST['tractor_number']; // Adjusted to match the form field name
+    $task_name = $_POST['task']; // Adjusted to match the form field name
+    $hours_used = $_POST['hours_used'];
+    $area_covered = $_POST['area_covered'];
+    $note = $_POST['note'];
+
+    // Get tractor ID based on tractor number
+    $query = "SELECT TractorID FROM tractors WHERE TractorNumber = '$tractor_number'";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_assoc($result);
+    $tractor_id = $row['TractorID'];
+
+    // Get task ID based on task name
+    $query = "SELECT id FROM tasks WHERE task_name = '$task_name'";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_assoc($result);
+    $task_id = $row['id'];
+
+    // Insert data into the database
+    $query = "INSERT INTO TractorUsage (start_datetime, end_datetime, tractor_id, task_id, hours_used, area_covered, note, created_at, updated_at) 
+              VALUES ('$start_datetime', '$end_datetime', '$tractor_id', '$task_id', '$hours_used', '$area_covered', '$note', NOW(), NOW())";
+    
+    // Execute the query
+    $result = mysqli_query($con, $query);
+    
+    // Check if the insertion was successful
+    if ($result) {
+        // Redirect to work-master.php
+        header("Location: work-master.php");
+        exit; // Ensure that no further code is executed after redirection
+    } else {
+        echo "Error: " . mysqli_error($con);
+    }
+}
 
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,68 +76,64 @@ session_start();
 "
     />
 
-    <title>User Hub</title>
+    <title>Admin Hub</title>
   </head>
   <body>
     <!-- SIDEBAR -->
   <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
-        <span class="text">User Hub</span>
+        <span class="text">Admin Hub</span>
     </a>
     <ul class="side-menu top">
-        <?php if (isset($_SESSION['user_id'])): // Check if user is authenticated ?>
-            <?php if ($_SESSION['user_type'] === 'admin'): ?>
-                <li>
-                    <a href="dashboard.php" <?php if (basename($_SERVER['PHP_SELF']) == 'dashboard.php') echo 'class="active"'; ?>>
-                        <i class='bx bxs-dashboard'></i>
-                        <span class="text">Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="user-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'user-master.php') echo 'class="active"'; ?>>
-                        <i class="bx bxs-user-account"></i>
-                        <span class="text">User Master</span>
-                    </a>
-                </li>
-                <li>
-                  <a href="tractor-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'tractor-master.php') !== false) echo 'class="active"'; ?>>
-                      <i class='bx bxs-car-wash' ></i>
-                      <span class="text">Tractor Master</span>
-                  </a>
-                </li>
-                <li>
-                    <a href="model.php" <?php if (basename($_SERVER['PHP_SELF']) == 'model.php') echo 'class="active"'; ?>>
-                        <i class="bx bxs-package"></i>
-                        <span class="text">Model Master</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="report.php" <?php if (basename($_SERVER['PHP_SELF']) == 'report.php') echo 'class="active"'; ?>>
-                        <i class="bx bxs-report"></i>
-                        <span class="text">Reports</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="task.php" <?php if (basename($_SERVER['PHP_SELF']) == 'task.php') echo 'class="active"'; ?>>
-                        <i class="bx bx-task"></i>
-                        <span class="text">Task Master</span>
-                    </a>
-                </li>
-                <li>
-                  <a href="task.php" <?php if (basename($_SERVER['PHP_SELF']) == 'task.php') echo 'class="active"'; ?>>
-                      <i class="bx bx-task"></i>
-                      <span class="text">Work Master</span>
-                  </a>
-              </li>
-            <?php endif; ?>
-            <li>
-                <a href="daily-work.php" <?php if (basename($_SERVER['PHP_SELF']) == 'daily-work.php') echo 'class="active"'; ?>>
-                    <i class="bx bxs-group"></i>
-                    <span class="text">Daily Work</span>
-                </a>
-            </li>
-        <?php endif; ?>
+        <li>
+            <a href="dashboard.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'dashboard.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="user-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'user-master.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-user-account"></i>
+                <span class="text">User Master</span>
+            </a>
+        </li>
+        <li>
+            <a href="tractor-master.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'tractor-master.php') !== false) echo 'class="active"'; ?>>
+                <i class='bx bxs-car-wash' ></i>
+                <span class="text">Tractor Master</span>
+            </a>
+        </li>
+        <li>
+            <a href="model.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'model.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-package"></i>
+                <span class="text">Model Master</span>
+            </a>
+        </li>
+        <li>
+            <a href="report.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'report.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-report"></i>
+                <span class="text">Reports</span>
+            </a>
+        </li>
+        <li>
+            <a href="task.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'task.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bx-task"></i>
+                <span class="text">Task Master</span>
+            </a>
+        </li>
+        <li>
+          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
+              <i class="bx bx-task"></i>
+              <span class="text">Work Master</span>
+          </a>
+        </li>
+        <li>
+            <a href="daily-work.php" <?php if (strpos($_SERVER['REQUEST_URI'], 'daily-work.php') !== false) echo 'class="active"'; ?>>
+                <i class="bx bxs-group"></i>
+                <span class="text">Daily Work</span>
+            </a>
+        </li>
     </ul>
     <ul class="side-menu">
         <li>
@@ -141,68 +186,52 @@ session_start();
                               activity.
                             </p>
                             <div class="content">
-                              <form action="#">
-                                <div class="user-details">
-                                  <div class="input-box">
-                                    <span class="details"
-                                      >Start Date & Time:</span
-                                    >
-                                    <input type="datetime-local" required />
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details"
-                                      >End Date & Time:</span
-                                    >
-                                    <input type="datetime-local" required />
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Tractor Number</span>
-                                    <select name="" id="">
-                                      <option value="">--Select Tractor Number--</option>
-                                      <option value="">112</option>
-                                      <option value="">223</option>
-                                    </select>
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details">Task</span>
-                                    <select name="" id="">
-                                      <option value="">--Select Task--</option>
-                                      <option value="">Land Clearing</option>
-                                      <option value="">Construction</option>
-                                      <option value="">Harvesting</option>
-                                      <option value="">Cultivating</option>
-                                    </select>
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Hours Used:</span>
-                                    <input type="number" required />
-                                  </div>
-                                  <div class="input-box">
-                                    <span class="details">Area Covered:</span>
-                                    <input type="number" required />
-                                  </div>
-
-                                  <div class="input-box">
-                                    <span class="details">Note:</span>
-                                    <textarea
-                                      cols="83"
-                                      rows="4"
-                                      placeholder="Enter message"
-                                      class="p-2"
-                                    ></textarea>
-                                  </div>
-                                </div>
-
-                              <div class="addNewButton mt-4">
-                                <button
-                                class="btn btn-secondary rounded me-3 mb-2 px-4 py-2"
-                              >
-                               Save
-                              </button>
-                            </div>
-                              </form>
+                           <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <div class="user-details">
+        <div class="input-box">
+            <span class="details">Start Date & Time:</span>
+            <input type="datetime-local" name="start_datetime" required />
+        </div>
+        <div class="input-box">
+            <span class="details">End Date & Time:</span>
+            <input type="datetime-local" name="end_datetime" required />
+        </div>
+        <div class="input-box">
+            <span class="details">Tractor Number:</span>
+            <select name="tractor_number" required>
+                <option value="">--Select Tractor Number--</option>
+                <?php foreach ($tractor_numbers as $tractor): ?>
+                    <option value="<?php echo $tractor['TractorNumber']; ?>"><?php echo $tractor['TractorNumber']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="input-box">
+            <span class="details">Task:</span>
+            <select name="task" required>
+                <option value="">--Select Task--</option>
+                <?php foreach ($tasks as $task): ?>
+                    <option value="<?php echo $task['task_name']; ?>"><?php echo $task['task_name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="input-box">
+            <span class="details">Hours Used:</span>
+            <input type="number" name="hours_used" required />
+        </div>
+        <div class="input-box">
+            <span class="details">Area Covered:</span>
+            <input type="number" name="area_covered" required />
+        </div>
+        <div class="input-box">
+            <span class="details">Note:</span>
+            <textarea name="note" cols="83" rows="4" placeholder="Enter message" class="p-2"></textarea>
+        </div>
+    </div>
+    <div class="addNewButton mt-4">
+        <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Save</button>
+    </div>
+</form>
+                          </form>
                             </div>
               </div>
           </div>  

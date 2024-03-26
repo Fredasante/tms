@@ -1,8 +1,19 @@
 <?php 
 
+// Include configuration file
 require 'config.php';
 
+// Start session
 session_start();
+
+// Check if the user is authenticated and is an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    // Redirect to the login page or an unauthorized access page
+    header('Location: login.php'); // or header('Location: unauthorized.php');
+    exit(); // Stop further execution
+}
+
+// User is authenticated and is an admin, continue to admin-dashboard page
 
 ?>
 
@@ -166,29 +177,52 @@ session_start();
                 <!-- USER DETAILS TABLE STARTS -->
                 <section id="table" class="container">
                   <div class="row">
-                    <table class="content-table">
-                      <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th>Task</th>
-                          <th>Hours Used</th>
-                          <th>Area Covered (m)</th>
-                          <th>Tractor Number</th>
-                          <th>Edit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>24/01/2023</td>
-                          <td>Plowing</td>
-                          <td>5</td>
-                          <td>2000</td>
-                          <td>112233</td>
-                          <td><a href="update-work.php"><button class="btn btn-info">View</button></td></a>
-                        </tr>
-                                     
-                      </tbody>
-                    </table>
+                   <table class="content-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Task</th>
+            <th>Hours Used</th>
+            <th>Area Covered (m)</th>
+            <th>Tractor Number</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        include 'config.php';
+
+        // Fetch data from the database
+        $query = "SELECT tu.id, tu.start_datetime, tu.end_datetime, tu.hours_used, tu.area_covered, t.task_name, tr.TractorNumber 
+                  FROM TractorUsage tu
+                  INNER JOIN tasks t ON tu.task_id = t.id
+                  INNER JOIN tractors tr ON tu.tractor_id = tr.TractorID";
+        $result = mysqli_query($con, $query);
+
+        // Check if any rows are returned
+        if (mysqli_num_rows($result) > 0) {
+            // Output data of each row
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $row["start_datetime"] . " to " . $row["end_datetime"] . "</td>";
+                echo "<td>" . $row["task_name"] . "</td>";
+                echo "<td>" . $row["hours_used"] . "</td>";
+                echo "<td>" . $row["area_covered"] . "</td>";
+                echo "<td>" . $row["TractorNumber"] . "</td>";
+                echo "<td><a href='update-work.php?id=" . $row["id"] . "'><button class='btn btn-info'>View</button></a></td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='6'>No records found</td></tr>";
+        }
+
+        // Close database connection
+        mysqli_close($con);
+        ?>
+    </tbody>
+</table>
+
+
                   </div>
                 </section>
                 <!-- USER DETAILS TABLE ENDS -->             

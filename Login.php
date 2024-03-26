@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
                             if ($_SESSION['user_type'] === 'admin') {
                                 header('location: dashboard.php');
                             } else {
-                                header('location: user.php');
+                                header('location: daily-work.php');
                             }
                             exit();
                         } else {
