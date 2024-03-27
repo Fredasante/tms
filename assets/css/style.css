@@ -20,6 +20,8 @@ li {
   --dark-grey: #aaaaaa;
   --dark: #342e37;
   --light-orange: #ffe0d3;
+  --yellow: #ffce26;
+  --light-yellow: #fff2c6;
 }
 
 html {
@@ -361,6 +363,51 @@ body {
   }
 }
 
+/* BOX INFO */
+#content main .box-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-gap: 24px;
+  margin-top: 36px;
+}
+#content main .box-info li {
+  padding: 24px;
+  background: var(--light);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  grid-gap: 24px;
+}
+#content main .box-info li .bx {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  font-size: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#content main .box-info li:nth-child(1) .bx {
+  background: var(--light-blue);
+  color: var(--blue);
+}
+#content main .box-info li:nth-child(2) .bx {
+  background: var(--light-orange);
+  color: var(--orange);
+}
+#content main .box-info li:nth-child(3) .bx {
+  background: rgb(127, 125, 128);
+  color: white;
+}
+#content main .box-info li .text h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--dark);
+}
+#content main .box-info li .text p {
+  color: var(--dark);
+}
+
 /* TABLE */
 #table {
   min-height: 22vh;
@@ -700,7 +747,7 @@ form input[type="radio"] {
 /* admin dashboard page */
 .dashboard-title {
   font-weight: 700 !important;
-  font-size: 25px !important;
+  font-size: 22px !important;
 }
 
 .dashboard-one {
@@ -709,8 +756,9 @@ form input[type="radio"] {
 }
 
 .dashboard-two {
-  background: #12a3ba !important;
-  color: white !important;
+  /* background: #aedce3 !important; */
+  /* color: white !important; */
+  background: #f7f9ff !important;
 }
 
 .dashboard-three {

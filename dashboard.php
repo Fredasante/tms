@@ -37,11 +37,17 @@ $sql_recent_logins = "SELECT users.name, login_history.login_time, login_history
                       FROM login_history
                       INNER JOIN users ON login_history.user_id = users.id
                       ORDER BY login_history.login_time DESC
-                      LIMIT 3";
+                      LIMIT 4";
 $result_recent_logins = mysqli_query($con, $sql_recent_logins);
+
+// Query to retrieve statistics from tractorusage table
+$sql_tractorusage_stats = "SELECT COUNT(*) AS total_records, AVG(hours_used) AS avg_hours_used, SUM(area_covered) AS total_area_covered FROM tractorusage";
+$result_tractorusage_stats = mysqli_query($con, $sql_tractorusage_stats);
+$row_tractorusage_stats = mysqli_fetch_assoc($result_tractorusage_stats);
 
 // Display the dashboard
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -159,21 +165,48 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
       </div>
 
       <div class="container">
-        <h2 class="text-center mt-4 mb-5 dashboard-title">ADMIN DASHBOARD</h2>
+        <h4 class="mt-5 mb-2 dashboard-title">TRACTOR USAGE STATISTICS</h4>
 
-        <div class="row gap-5 ms-3">
+    <main class="mb-5">
+      <ul class="box-info">
+				<li>
+            <i class='bx bx-border-all'></i>
+					  <span class="text">					
+					  <h3><?php echo $row_tractorusage_stats['total_records']; ?></h3>
+            <p>Total Records</p>
+
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-watch'></i>
+					<span class="text">
+						<h3><?php echo $row_tractorusage_stats['avg_hours_used']; ?> hours</h3>
+						<p>Average Hours Used</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-disc'></i>
+					<span class="text">
+						<h3><?php echo $row_tractorusage_stats['total_area_covered']; ?> m²</h3>
+						<p>Total Area Covered</p>
+					</span>
+				</li>
+			</ul>
+    </main>
+
+        <div class="row">
           <div class="col-md-6 ">
             <div class="card mb-3 " style="max-width: 38rem;">
             <div class="card-header dashboard-one">
               <h2>USER STATISTICS</h2>
             </div>
             <div class="card-body text-secondary">
-              <canvas id="userStatisticsChart" width="400" height="300"></canvas>
+              <canvas id="userStatisticsChart" width="400" height="143"></canvas>
             </div>
             </div>
           </div>
 
-          <div class="col-md-5">
+          <div class="col-md-6">
             <div class="row">
             <div class="dashboard col-12">
             <div class="card mb-3" style="max-width: 30rem;">
@@ -201,31 +234,10 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
                         </div>
                       </div>
 
-                    <div class="row mt-3 dashboard">
-                      <div class="col-12 ">
-                        <div class="card mb-3" style="max-width: 18rem;">
-                        <div class="card-header dashboard-three">
-                          <h2>USERS</h2>
-                        </div>
-                        <div class="card-body text-secondary">
-                          <p>Total Users: <?php echo $total_users; ?></p>
-                          <p>Active Users: <?php echo $active_users; ?></p>
-                          <p>Inactive Users: <?php echo $inactive_users; ?></p>
-                        </div>
-                      </div>
-                    </div>
                 </div>
           </div>
           </div>
         </div>
-
-             
-      
-
-
-    <!-- Add any other dashboard components or metrics here -->
-
-    <!-- Add any necessary JavaScript for interactive dashboard elements -->
       </div>
     </section>
 
