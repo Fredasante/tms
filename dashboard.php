@@ -110,7 +110,7 @@ $result_recent_logins = mysqli_query($con, $sql_recent_logins);
             </a>
         </li>
         <li>
-          <a href="task.php" <?php if (basename($_SERVER['PHP_SELF']) == 'task.php') echo 'class="active"'; ?>>
+          <a href="work-master.php" <?php if (basename($_SERVER['PHP_SELF']) == 'work-master.php') echo 'class="active"'; ?>>
             <i class="bx bx-task"></i>
             <span class="text">Work Master</span>
           </a>

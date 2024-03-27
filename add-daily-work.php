@@ -13,18 +13,55 @@ if (!isset($_SESSION['user_id'])) {
 // Retrieve the logged-in user's ID from the session
 $user_id = $_SESSION['user_id'];
 
-// Fetch tractor usage records for the logged-in user
-$query = "SELECT tu.start_datetime, tu.hours_used, tu.area_covered, t.TractorNumber, tsk.task_name 
-          FROM TractorUsage tu
-          INNER JOIN Tractors t ON tu.tractor_id = t.TractorID
-          INNER JOIN tasks tsk ON tu.task_id = tsk.id
-          WHERE tu.user_id = $user_id";
+// Fetch tractor numbers from the database
+$query = "SELECT TractorID, TractorNumber FROM tractors";
 $result = mysqli_query($con, $query);
+$tractor_numbers = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-if (!$result) {
-    // Handle query error
-    die("Error fetching records: " . mysqli_error($con));
+// Fetch tasks from the database
+$query = "SELECT id, task_name FROM tasks WHERE active = 1"; // Assuming 'active' column indicates active tasks
+$result = mysqli_query($con, $query);
+$tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $start_datetime = $_POST['start_datetime'];
+    $end_datetime = $_POST['end_datetime'];
+    $tractor_number = $_POST['tractor_number']; // Adjusted to match the form field name
+    $task_name = $_POST['task']; // Adjusted to match the form field name
+    $hours_used = $_POST['hours_used'];
+    $area_covered = $_POST['area_covered'];
+    $note = $_POST['note'];
+
+    // Get tractor ID based on tractor number
+    $query = "SELECT TractorID FROM tractors WHERE TractorNumber = '$tractor_number'";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_assoc($result);
+    $tractor_id = $row['TractorID'];
+
+    // Get task ID based on task name
+    $query = "SELECT id FROM tasks WHERE task_name = '$task_name'";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_assoc($result);
+    $task_id = $row['id'];
+
+    // Insert data into the database
+    $query = "INSERT INTO TractorUsage (start_datetime, end_datetime, tractor_id, task_id, hours_used, area_covered, note, user_id, created_at, updated_at) 
+              VALUES ('$start_datetime', '$end_datetime', '$tractor_id', '$task_id', '$hours_used', '$area_covered', '$note', '$user_id', NOW(), NOW())";
+    
+    // Execute the query
+    $result = mysqli_query($con, $query);
+    
+    // Check if the insertion was successful
+    if ($result) {
+        // Redirect to daily-work.php
+        header("Location: daily-work.php");
+        exit; // Ensure that no further code is executed after redirection
+    } else {
+        echo "Error: " . mysqli_error($con);
+    }
 }
+
 ?>
 
 
@@ -53,7 +90,7 @@ if (!$result) {
   </head>
   <body>
     <!-- SIDEBAR -->
-  <section id="sidebar">
+ <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
         <span class="text">User Hub</span>
@@ -123,8 +160,6 @@ if (!$result) {
         </li>
     </ul>
   </section>
-
-
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->
@@ -152,125 +187,68 @@ if (!$result) {
 
         <!-- User Section -->
         <div>
-          <div class="row">
-            <div>
-              <div class="card">
-                <div class="card-header">
-                  <h2>VIEW DAILY WORK</h2>
-                  <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-3 mt-4">
-                      <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Click to Filter
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="#">Weekly</a></li>
-                          <li><a class="dropdown-item" href="#">Monthly</a></li>
-                          <li><a class="dropdown-item" href="#">Yearly</a></li>
-                        </ul>
-                      </div>                    
-                    </div>
-                    <div class="col-lg-4 mt-4">
-                      <div class="input-group mb-3">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Search.."
-                        />
-                        <button class="btn btn-primary" type="button">
-                          Find
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- Button trigger modal for adding daily work -->
-                    <div class="addNewButton col-lg-2 mt-4">
-                      <a href="add-daily-work.php">
-                      <button
-                        type="button"
-                        class="btn btn-secondary rounded me-3 mb-2"
-                      >
-                        Add New
-                      </button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- USER DETAILS TABLE STARTS -->
-           <table class="content-table">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Task</th>
-            <th>Hours Used</th>
-            <th>Area Covered (m)</th>
-            <th>Tractor Number</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Loop through each tractor usage record and display it in a table row
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo '<tr>';
-            echo '<td>' . $row['start_datetime'] . '</td>';
-            echo '<td>' . $row['task_name'] . '</td>';
-            echo '<td>' . $row['hours_used'] . '</td>';
-            echo '<td>' . $row['area_covered'] . '</td>';
-            echo '<td>' . $row['TractorNumber'] . '</td>';
-            echo '</tr>';
-        }
-        ?>
-    </tbody>
-</table>
-                <!-- USER DETAILS TABLE ENDS -->
-
-                <!-- Modal for adding daily work  activity-->
-                <div
-                  class="modal fade"
-                  id="userModal"
-                  tabindex="-1"
-                  aria-labelledby="addNewUser"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addNewUser">
-                          Add New Task
-                        </h1>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div class="modal-body">
-                        <!-- INPUT MODAL DETAILS FOR TASK STARTS -->
-                        <div id="signUp">
-                          <div class="signup-container">
-                            <div class="title">DAILY WORK</div>
+          <div id="signUp">
+            <div class="signup-container">
+              <a href="daily-work.php">
+                <button class="mb-4 btn btn-secondary"><i class='bx bx-chevrons-left me-2'></i>
+                Back
+                </button>
+              </a>
+              <div class="title">DAILY WORK</div>
                             <p class="">
                               Fill in the details below to record daily work
                               activity.
                             </p>
                             <div class="content">
-
+                           <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <div class="user-details">
+        <div class="input-box">
+            <span class="details">Start Date & Time:</span>
+            <input type="datetime-local" name="start_datetime" required />
+        </div>
+        <div class="input-box">
+            <span class="details">End Date & Time:</span>
+            <input type="datetime-local" name="end_datetime" required />
+        </div>
+        <div class="input-box">
+            <span class="details">Tractor Number:</span>
+            <select name="tractor_number" required>
+                <option value="">--Select Tractor Number--</option>
+                <?php foreach ($tractor_numbers as $tractor): ?>
+                    <option value="<?php echo $tractor['TractorNumber']; ?>"><?php echo $tractor['TractorNumber']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="input-box">
+            <span class="details">Task:</span>
+            <select name="task" required>
+                <option value="">--Select Task--</option>
+                <?php foreach ($tasks as $task): ?>
+                    <option value="<?php echo $task['task_name']; ?>"><?php echo $task['task_name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="input-box">
+            <span class="details">Hours Used:</span>
+            <input type="number" name="hours_used" required />
+        </div>
+        <div class="input-box">
+            <span class="details">Area Covered:</span>
+            <input type="number" name="area_covered" required />
+        </div>
+        <div class="input-box">
+            <span class="details">Note:</span>
+            <textarea name="note" cols="83" rows="4" placeholder="Enter message" class="p-2"></textarea>
+        </div>
+    </div>
+    <div class="addNewButton mt-4">
+        <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Save</button>
+    </div>
+</form>
+                          </form>
                             </div>
-                          </div>
-                        </div>
-                        <!-- INPUT MODAL DETAILS FOR TASK ENDS -->
-                      </div>
-
-                  
-                    </div>
-                  </div>
-                </div>
               </div>
-            </div>
-          </div>
+          </div>  
         </div>
       </div>
     </section>
