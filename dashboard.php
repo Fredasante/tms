@@ -48,7 +48,6 @@ $row_tractorusage_stats = mysqli_fetch_assoc($result_tractorusage_stats);
 // Display the dashboard
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
