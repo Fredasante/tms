@@ -1,17 +1,40 @@
 <?php
+// Include configuration file
 require 'config.php';
 
-// Start the session
+// Start session
 session_start();
 
-// Check if the user is not authenticated or if the user is not an admin
+// Check if the user is authenticated and is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    // Redirect the user to the login page or an unauthorized access page
+    // Redirect to the login page or an unauthorized access page
     header('Location: login.php'); // or header('Location: unauthorized.php');
     exit(); // Stop further execution
 }
 
-// The user is authenticated and is an admin, continue to user-master page
+// User is authenticated and is an admin, continue to admin-dashboard page
+
+// Pagination settings
+$records_per_page = 5;
+$current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Query to retrieve total number of users
+$sql_total_users = "SELECT COUNT(*) AS total_users FROM users";
+$result_total_users = mysqli_query($con, $sql_total_users);
+$row_total_users = mysqli_fetch_assoc($result_total_users);
+$total_users = $row_total_users['total_users'];
+
+// Calculate total number of pages
+$total_pages = ceil($total_users / $records_per_page);
+
+// Calculate offset for SQL query
+$offset = ($current_page - 1) * $records_per_page;
+
+// Query to retrieve users for the current page
+$sql_users = "SELECT id, name, email, phone, code, status FROM users LIMIT $offset, $records_per_page";
+$result_users = mysqli_query($con, $sql_users);
+
+// Display the users' table
 ?>
 
 <!DOCTYPE html>
@@ -39,7 +62,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
   </head>
   <body>
     <!-- SIDEBAR -->
-    <section id="sidebar">
+  <section id="sidebar">
     <a href="#" class="brand">
         <i class="bx bxs-smile"></i>
         <span class="text">Admin Hub</span>
@@ -170,62 +193,66 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                 </div>
 
                 <!-- USER DETAILS TABLE STARTS -->
-                <form action="">
-                  <section id="table" class="container">
-                    <div class="row">
-                      <table class="content-table">
+               <section id="table" class="container">
+                <div class="row">
+                    <table class="content-table">
                         <thead>
-                          <tr>
-                            <th>Sr. No</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Contact Number</th>
-                            <th>Code</th>
-                            <th>Status</th>
-                            <th>Edit</th>
-                          </tr>
+                            <tr>
+                                <th>Sr. No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Contact Number</th>
+                                <th>Code</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                            </tr>
                         </thead>
                         <tbody>
-                          <?php
-
-                            $sql = "SELECT id, name, email, phone, code, status FROM users";
-
-                            $result = mysqli_query($con, $sql);
-
-                            if (mysqli_num_rows($result) > 0) {
-                            // Output data of each row
-                               while ($row = mysqli_fetch_assoc($result)) {
-                              ?>
-                            <tr>
-                              <td><?php echo $row["id"]; ?></td>
-                              <td><?php echo $row["name"]; ?></td>
-                              <td><?php echo $row["email"]; ?></td>
-                              <td><?php echo $row["phone"]; ?></td>
-                              <td><?php echo $row["code"]; ?></td>
-                              <td><?php echo $row["status"]; ?></td>
-
-
-                                <td>
-                                <a href="update-user.php?updateid=<?php echo $row["id"]; ?>">  
-                                  <button type="button" class="btn btn-info btn-sm"> View</button>
-                                </a>
-                              </td> 
-                           </tr>
-                          <?php
-                        }
-                        } else {
-                          ?>
-                         <tr>
-                          <td colspan="7">No users found</td>
-                        </tr>
-                          <?php
-                              }
-                           ?>                         
+                            <?php if (mysqli_num_rows($result_users) > 0) : ?>
+                                <?php $sr_no = ($current_page - 1) * $records_per_page + 1; ?>
+                                <?php while ($row = mysqli_fetch_assoc($result_users)) : ?>
+                                    <tr>
+                                        <td><?php echo $sr_no++; ?></td>
+                                        <td><?php echo $row["name"]; ?></td>
+                                        <td><?php echo $row["email"]; ?></td>
+                                        <td><?php echo $row["phone"]; ?></td>
+                                        <td><?php echo $row["code"]; ?></td>
+                                        <td><?php echo $row["status"]; ?></td>
+                                        <td>
+                                            <a href="update-user.php?updateid=<?php echo $row["id"]; ?>">
+                                                <button type="button" class="btn btn-info btn-sm"> View</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="7">No users found</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
-                      </table>
-                    </div>
-                  </section>
-                </form>
+                    </table>
+                </div>
+              </section>
+
+              <!-- Pagination -->
+              <div class="pagination-container">
+                  <div class="pagination">
+                      <?php if ($current_page > 1) : ?>
+                          <a href="?page=<?php echo $current_page - 1; ?>"><i class='bx bx-left-arrow-alt' ></i> Previous</a>
+                      <?php endif; ?>
+                      <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
+                          <?php if ($i == $current_page) : ?>
+                              <span class="current-page"><?php echo $i; ?></span>
+                          <?php else : ?>
+                              <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                          <?php endif; ?>
+                      <?php endfor; ?>
+                      <?php if ($current_page < $total_pages) : ?>
+                          <a href="?page=<?php echo $current_page + 1; ?>">Next <i class='bx bx-right-arrow-alt' ></i></a>
+                      <?php endif; ?>
+                  </div>
+              </div>
                 <!-- USER DETAILS TABLE ENDS -->
               </div>
             </div>

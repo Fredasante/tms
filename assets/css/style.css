@@ -564,6 +564,38 @@ textarea {
   background: #873e23;
 }
 
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px; /* Adjust as needed */
+}
+
+.pagination {
+  display: inline-block;
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+.pagination a,
+.pagination .current-page {
+  padding: 8px 12px;
+  margin: 0 2px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+  background-color: #ddd;
+}
+
+.pagination .current-page {
+  background-color: #0ac2de;
+  color: white;
+  border: 1px solid #0ac2de;
+}
+
 @media (max-width: 768px) {
   .addNewButton button {
     margin-right: 0px !important;
