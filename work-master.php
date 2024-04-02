@@ -196,84 +196,83 @@ $result_work_records = mysqli_query($con, $sql_work_records);
                   </div>
                 </div>
 
-                <!-- USER DETAILS TABLE STARTS -->
-   <section id="table" class="container">
-    <div class="row">
-        <table class="content-table">
-            <thead>
-                <tr>
-                    <th>Sr. No</th>
-                    <th>Date</th>
-                    <th>Task</th>
-                    <th>Hours Used</th>
-                    <th>Area Covered (m)</th>
-                    <th>Tractor Number</th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                include 'config.php';
+                <!-- TRACTOR DETAILS TABLE STARTS -->
+                <section id="table" class="container">
+                  <div class="row">
+                      <table class="content-table">
+                          <thead>
+                              <tr>
+                                  <th>Sr. No</th>
+                                  <th>Date</th>
+                                  <th>Task</th>
+                                  <th>Hours Used</th>
+                                  <th>Area Covered (m)</th>
+                                  <th>Tractor Number</th>
+                                  <th>Edit</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <?php
+                              include 'config.php';
 
-                // Pagination settings
-                $records_per_page = 5;
-                $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
-                $offset = ($current_page - 1) * $records_per_page;
+                              // Pagination settings
+                              $records_per_page = 5;
+                              $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+                              $offset = ($current_page - 1) * $records_per_page;
 
-                // Fetch data from the database
-                $query = "SELECT tu.id, tu.start_datetime, tu.end_datetime, tu.hours_used, tu.area_covered, t.task_name, tr.TractorNumber 
-                          FROM TractorUsage tu
-                          INNER JOIN tasks t ON tu.task_id = t.id
-                          INNER JOIN tractors tr ON tu.tractor_id = tr.TractorID
-                          LIMIT $offset, $records_per_page";
-                $result = mysqli_query($con, $query);
+                              // Fetch data from the database
+                              $query = "SELECT tu.id, tu.start_datetime, tu.end_datetime, tu.hours_used, tu.area_covered, t.task_name, tr.TractorNumber 
+                                        FROM TractorUsage tu
+                                        INNER JOIN tasks t ON tu.task_id = t.id
+                                        INNER JOIN tractors tr ON tu.tractor_id = tr.TractorID
+                                        LIMIT $offset, $records_per_page";
+                              $result = mysqli_query($con, $query);
 
-                // Check if any rows are returned
-                if (mysqli_num_rows($result) > 0) {
-                    $sr_no = ($current_page - 1) * $records_per_page + 1;
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>" . $sr_no++ . "</td>";
-                        echo "<td>" . $row["start_datetime"] . " to " . $row["end_datetime"] . "</td>";
-                        echo "<td>" . $row["task_name"] . "</td>";
-                        echo "<td>" . $row["hours_used"] . "</td>";
-                        echo "<td>" . $row["area_covered"] . "</td>";
-                        echo "<td>" . $row["TractorNumber"] . "</td>";
-                        echo "<td><a href='update-work.php?id=" . $row["id"] . "'><button class='btn btn-info btn-sm'>View</button></a></td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7'>No records found</td></tr>";
-                }
+                              // Check if any rows are returned
+                              if (mysqli_num_rows($result) > 0) {
+                                  $sr_no = ($current_page - 1) * $records_per_page + 1;
+                                  while ($row = mysqli_fetch_assoc($result)) {
+                                      echo "<tr>";
+                                      echo "<td>" . $sr_no++ . "</td>";
+                                      echo "<td>" . $row["start_datetime"] . " to " . $row["end_datetime"] . "</td>";
+                                      echo "<td>" . $row["task_name"] . "</td>";
+                                      echo "<td>" . $row["hours_used"] . "</td>";
+                                      echo "<td>" . $row["area_covered"] . "</td>";
+                                      echo "<td>" . $row["TractorNumber"] . "</td>";
+                                      echo "<td><a href='update-work.php?id=" . $row["id"] . "'><button class='btn btn-info btn-sm'>View</button></a></td>";
+                                      echo "</tr>";
+                                  }
+                              } else {
+                                  echo "<tr><td colspan='7'>No records found</td></tr>";
+                              }
 
-                // Close database connection
-                mysqli_close($con);
-                ?>
-            </tbody>
-        </table>
-    </div>
-</section>
+                              // Close database connection
+                              mysqli_close($con);
+                              ?>
+                          </tbody>
+                      </table>
+                  </div>
+                </section>
+                <!-- TRACTOR DETAILS TABLE ENDS -->
 
-
-  <div class="pagination-container">
-    <div class="pagination">
-        <?php if ($current_page > 1) : ?>
-            <a href="?page=<?php echo $current_page - 1; ?>"><i class='bx bx-left-arrow-alt'></i> Previous</a>
-        <?php endif; ?>
-        <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
-            <?php if ($i == $current_page) : ?>
-                <span class="current-page"><?php echo $i; ?></span>
-            <?php else : ?>
-                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-            <?php endif; ?>
-        <?php endfor; ?>
-        <?php if ($current_page < $total_pages) : ?>
-            <a href="?page=<?php echo $current_page + 1; ?>">Next <i class='bx bx-right-arrow-alt'></i></a>
-        <?php endif; ?>
-    </div>
-</div>
-
-                <!-- USER DETAILS TABLE ENDS -->             
+                <!-- pagination -->
+                <div class="pagination-container">
+                  <div class="pagination">
+                      <?php if ($current_page > 1) : ?>
+                          <a href="?page=<?php echo $current_page - 1; ?>"><i class='bx bx-left-arrow-alt'></i> Previous</a>
+                      <?php endif; ?>
+                      <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
+                          <?php if ($i == $current_page) : ?>
+                              <span class="current-page"><?php echo $i; ?></span>
+                          <?php else : ?>
+                              <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                          <?php endif; ?>
+                      <?php endfor; ?>
+                      <?php if ($current_page < $total_pages) : ?>
+                          <a href="?page=<?php echo $current_page + 1; ?>">Next <i class='bx bx-right-arrow-alt'></i></a>
+                      <?php endif; ?>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

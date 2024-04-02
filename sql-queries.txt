@@ -1,0 +1,71 @@
+CREATE TABLE users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone INT(45) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    address VARCHAR(45) NOT NULL,
+    gender VARCHAR(45) NOT NULL,
+    type_of_user VARCHAR(45) NOT NULL,
+    status VARCHAR(45) NOT NULL DEFAULT 'active',
+    code INT(45) NOT NULL,
+    email_verified_at TIMESTAMP NULL,
+    password VARCHAR(255) NOT NULL,
+    remember_token VARCHAR(100) NULL,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_name VARCHAR(255) NOT NULL,
+    active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Tractors (
+    TractorID INT AUTO_INCREMENT PRIMARY KEY,
+    TractorNumber VARCHAR(255) NOT NULL,
+    ModelID INT NOT NULL,
+    Horsepower INT,
+    SerialNumber VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (ModelID) REFERENCES TractorModels(ModelID)
+);
+
+
+CREATE TABLE TractorModels (
+    ModelID INT PRIMARY KEY AUTO_INCREMENT,
+    ModelName VARCHAR(255) NOT NULL,
+    Active BOOLEAN NOT NULL
+);
+
+CREATE TABLE login_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED,
+    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ip_address VARCHAR(45),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE TractorUsage (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    start_datetime DATETIME NOT NULL,
+    end_datetime DATETIME NOT NULL,
+    tractor_id INT NOT NULL,
+    task_id INT NOT NULL,
+    hours_used INT NOT NULL,
+    area_covered DECIMAL(10,2) NOT NULL,
+    note TEXT,
+    user_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (tractor_id) REFERENCES Tractors(TractorID),
+    FOREIGN KEY (task_id) REFERENCES tasks(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
