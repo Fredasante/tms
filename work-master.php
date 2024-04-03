@@ -206,7 +206,7 @@ $result_work_records = mysqli_query($con, $sql_work_records);
                                   <th>Date</th>
                                   <th>Task</th>
                                   <th>Hours Used</th>
-                                  <th>Area Covered (m)</th>
+                                  <th>Area Covered (m²)</th>
                                   <th>Tractor Number</th>
                                   <th>Edit</th>
                               </tr>

@@ -19,13 +19,11 @@ $pdf_content = '';
 
 // Check if the form is submitted for generating the report
 if (isset($_POST['generate_report'])) {
-    // Write SQL query to fetch data
-    $sql = "SELECT TractorNumber, ModelName, SerialNumber, Horsepower FROM Tractors JOIN TractorModels ON Tractors.ModelID = TractorModels.ModelID";
+    // Write SQL query to fetch tractor usage data
+    $sql_tractors = "SELECT DISTINCT tractor_id, TractorNumber FROM TractorUsage JOIN tractors ON TractorUsage.tractor_id = tractors.TractorID";
+    $result_tractors = mysqli_query($con, $sql_tractors);
 
-    // Execute the query
-    $result = mysqli_query($con, $sql);
-
-    if ($result) {
+    if ($result_tractors) {
         // Create new PDF document
         $pdf = new TCPDF();
 
@@ -37,10 +35,10 @@ if (isset($_POST['generate_report'])) {
         $pdf->SetTextColor(255, 255, 255); // Text color
 
         // Set font for the title
-        $pdf->SetFont('helvetica', 'B', 20);
+        $pdf->SetFont('helvetica', 'B', 16);
 
         // Title
-        $pdf->Cell(0, 15, 'Tractor Management System Report', 0, 1, 'C', true); // Title
+        $pdf->Cell(0, 15, 'TRACTOR USAGE REPORT', 0, 1, 'C', true); // Title
 
         // Reset text color to black
         $pdf->SetTextColor(0, 0, 0); // Black color
@@ -49,43 +47,75 @@ if (isset($_POST['generate_report'])) {
         $pdf->SetFont('helvetica', '', 12);
 
         // Descriptive Text
-        $pdf->Cell(0, 10, 'This report contains information about tractors in the management system.', 0, 1, 'C'); // Descriptive text
-        $pdf->Ln(5); // Add space of 5 units
+        $pdf->Cell(0, 13, 'This report contains information about the tractor usage in the management system.', 0, 1, 'C'); // Descriptive text
+        $pdf->Ln(5); // Add space of 5 units    
+
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Fetch and output tractor usage summary
+        while ($row_tractor = mysqli_fetch_assoc($result_tractors)) {
+            // Write SQL query to fetch tractor usage details
+            $sql_usage = "SELECT SUM(hours_used) AS total_hours, SUM(area_covered) AS total_area_covered FROM TractorUsage WHERE tractor_id = {$row_tractor['tractor_id']}";
+            $result_usage = mysqli_query($con, $sql_usage);
+            $row_usage = mysqli_fetch_assoc($result_usage);
+
+            // Output tractor usage summary
+            $usage_summary = "Tractor number {$row_tractor['TractorNumber']} has been used for a total of {$row_usage['total_hours']} hours and has covered an area of {$row_usage['total_area_covered']} square meters.";
+            $pdf->MultiCell(0, 10, $usage_summary, 0, 'L');
+            $pdf->Ln(3); // Add space of 3 units
+        }
+
+        // Set some content to print
+        $html = <<<EOD
+        <h2>Tabular report on <a href="http://www.tms.org" style="text-decoration:none;background-color: #2596be;color:black;">&nbsp;<span style="color:black;">TRACTOR</span><span style="color:white;"> USAGE</span>&nbsp;</a>!</h2>
+        <p style="color:#CC0000;">TABLE STATISTICS</p>
+        EOD;
 
         // Include HTML table structure with classes and styles
-        $html = '
-            <section id="table" class="container">
-                <div class="row">
-                    <table class="content-table" border="1" cellspacing="0" cellpadding="8">
-                        <thead style="background-color: #f2f2f2;">
-                            <tr style="background-color: #e6eaed;">
-                                <th>Sr. No</th>
-                                <th>Tractor Number</th>
-                                <th>Model/Brand</th>
-                                <th>Horsepower</th>
-                                <th>Serial Number</th>
-                            </tr>
-                        </thead>
-                        <tbody>';
+        $html .= '<section id="table" class="container">
+            <div class="row">
+                <table class="content-table" border="1" cellspacing="0" cellpadding="8">
+                    <thead style="background-color: #f2f2f2;">
+                        <tr style="background-color: #e6eaed;">
+                            <th>Sr. No</th>
+                            <th>Start Datetime</th>
+                            <th>End Datetime</th>
+                            <th>Task</th>
+                            <th>Hours Used</th>
+                            <th>Area Covered (m)</th>
+                            <th>Tractor Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
 
-        // Fetch and output data
+        // Write SQL query to fetch tractor usage data
+        $sql_usage_data = "SELECT tu.id, tu.start_datetime, tu.end_datetime, tu.hours_used, tu.area_covered, t.task_name, tr.TractorNumber 
+            FROM TractorUsage tu
+            INNER JOIN tasks t ON tu.task_id = t.id
+            INNER JOIN tractors tr ON tu.tractor_id = tr.TractorID";
+        $result_usage_data = mysqli_query($con, $sql_usage_data);
+
+        // Fetch and output tractor usage data
         $counter = 1;
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row = mysqli_fetch_assoc($result_usage_data)) {
             $html .= '<tr>';
-            $html .= '<td>' . $counter . '</td>';
-            $html .= '<td>' . $row['TractorNumber'] . '</td>';
-            $html .= '<td>' . $row['ModelName'] . '</td>';
-            $html .= '<td>' . $row['Horsepower'] . '</td>';
-            $html .= '<td>' . $row['SerialNumber'] . '</td>';
+            $html .= '<td style="padding: 8px;">' . $counter . '</td>';
+            $html .= '<td style="padding: 8px;">' . $row['start_datetime'] . '</td>';
+            $html .= '<td style="padding: 8px;">' . $row['end_datetime'] . '</td>';
+            $html .= '<td style="padding: 8px;">' . $row['task_name'] . '</td>';
+            $html .= '<td style="padding: 8px;">' . $row['hours_used'] . '</td>';
+            $html .= '<td style="padding: 8px;">' . $row['area_covered'] . '</td>';
+            $html .= '<td style="padding: 8px;">' . $row['TractorNumber'] . '</td>';
             $html .= '</tr>';
             $counter++;
         }
 
-        $html .= '
-                        </tbody>
-                    </table>
-                </div>
-            </section>';
+        $html .= '</tbody>
+                </table>
+            </div>
+        </section>';
+
 
         // Write HTML content to PDF
         $pdf->writeHTML($html, true, false, false, false, '');
@@ -101,6 +131,8 @@ if (isset($_POST['generate_report'])) {
     mysqli_close($con);
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
