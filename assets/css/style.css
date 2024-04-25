@@ -379,10 +379,10 @@ body {
   grid-gap: 24px;
 }
 #content main .box-info li .bx {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border-radius: 10px;
-  font-size: 36px;
+  font-size: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -397,6 +397,10 @@ body {
 }
 #content main .box-info li:nth-child(3) .bx {
   background: rgb(127, 125, 128);
+  color: white;
+}
+#content main .box-info li:nth-child(4) .bx {
+  background: rgb(140, 180, 176);
   color: white;
 }
 #content main .box-info li .text h3 {
@@ -415,7 +419,7 @@ body {
 
 #table h3,
 .card-header h2 {
-  font-size: 22px;
+  font-size: 17px !important;
   font-weight: bold;
 }
 
@@ -558,6 +562,14 @@ textarea {
   border: none;
 }
 
+.buttonSample button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #109eb4 !important;
+  border: none;
+}
+
 .input-group button {
   color: white;
   border: none;
@@ -567,12 +579,12 @@ textarea {
 .pagination-container {
   display: flex;
   justify-content: center;
-  margin-top: 30px; /* Adjust as needed */
+  margin-top: 30px;
 }
 
 .pagination {
   display: inline-block;
-  margin-bottom: 20px; /* Adjust as needed */
+  margin-bottom: 20px;
 }
 
 .pagination a,
@@ -777,9 +789,20 @@ form input[type="radio"] {
 }
 
 /* admin dashboard page */
-.dashboard-title {
+.dashboard-container {
+  background-color: #3385c4 !important;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.dashboard-titles {
   font-weight: 700 !important;
   font-size: 22px !important;
+}
+
+.dashboard-title {
+  font-weight: 700 !important;
+  font-size: 19px !important;
 }
 
 .dashboard-one {
@@ -821,4 +844,40 @@ iframe {
   width: 100% !important;
   height: 600px !important; /* Increase the height to make the preview larger */
   border: 1px solid #ccc;
+}
+
+.box1 {
+  background: #f6faff !important;
+  padding: 15px 20px;
+  border-radius: 10px;
+  background: #e9eef4 !important;
+}
+
+.padding1 {
+  padding: 0px 20px 15px 20px !important;
+}
+
+.box2 {
+  background: #fef1ee !important;
+  padding: 15px 40px !important;
+  border-radius: 10px;
+}
+
+.box3 {
+  background: #eaeaea !important;
+  padding: 15px 40px !important;
+  border-radius: 10px;
+}
+
+.box4 {
+  background: rgb(251, 236, 242) !important;
+  padding: 15px 40px !important;
+  border-radius: 10px;
+}
+
+.box1 .card-header,
+.box2 .card-header,
+.box3 .card-header,
+.box4 .card-header {
+  font-weight: 400;
 }

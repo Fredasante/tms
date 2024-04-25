@@ -1,4 +1,3 @@
-User
 <?php
 include 'config.php';
 
@@ -11,60 +10,79 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Retrieve the logged-in user's ID from the session
-$user_id = $_SESSION['user_id'];
+// Check if the record ID is provided in the URL
+if (isset($_GET['id'])) {
+    // Retrieve the record ID from the URL
+    $record_id = $_GET['id'];
 
-// Fetch tractor numbers from the database
-$query = "SELECT TractorID, TractorNumber FROM tractors";
-$result = mysqli_query($con, $query);
-$tractor_numbers = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    // Fetch the record details from the database based on the ID
+    $query = "SELECT * FROM TractorUsage WHERE id = ?";
+    $stmt = mysqli_prepare($con, $query);
+    mysqli_stmt_bind_param($stmt, "i", $record_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-// Fetch tasks from the database
-$query = "SELECT id, task_name FROM tasks WHERE active = 1"; // Assuming 'active' column indicates active tasks
-$result = mysqli_query($con, $query);
-$tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result && mysqli_num_rows($result) > 0) {
+        // Fetch the record details
+        $record = mysqli_fetch_assoc($result);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve form data
-    $start_datetime = $_POST['start_datetime'];
-    $end_datetime = $_POST['end_datetime'];
-    $tractor_number = $_POST['tractor_number']; // Adjusted to match the form field name
-    $task_name = $_POST['task']; // Adjusted to match the form field name
-    $hours_used = $_POST['hours_used'];
-    $area_covered = $_POST['area_covered'];
-    $note = $_POST['note'];
+        // Populate the form fields with the record details
+        $start_datetime = $record['start_datetime'];
+        $end_datetime = $record['end_datetime'];
+        $tractor_id = $record['tractor_id'];
+        $task_id = $record['task_id'];
+        $hours_used = $record['hours_used'];
+        $area_covered = $record['area_covered'];
+        $note = $record['note'];
 
-    // Get tractor ID based on tractor number
-    $query = "SELECT TractorID FROM tractors WHERE TractorNumber = '$tractor_number'";
-    $result = mysqli_query($con, $query);
-    $row = mysqli_fetch_assoc($result);
-    $tractor_id = $row['TractorID'];
+        // Fetch available tractor numbers
+        $query_tractors = "SELECT TractorID, TractorNumber FROM Tractors";
+        $result_tractors = mysqli_query($con, $query_tractors);
+        $tractors = mysqli_fetch_all($result_tractors, MYSQLI_ASSOC);
 
-    // Get task ID based on task name
-    $query = "SELECT id FROM tasks WHERE task_name = '$task_name'";
-    $result = mysqli_query($con, $query);
-    $row = mysqli_fetch_assoc($result);
-    $task_id = $row['id'];
+        // Fetch available tasks
+        $query_tasks = "SELECT id, task_name FROM tasks";
+        $result_tasks = mysqli_query($con, $query_tasks);
+        $tasks = mysqli_fetch_all($result_tasks, MYSQLI_ASSOC);
 
-    // Insert data into the database
-    $query = "INSERT INTO TractorUsage (start_datetime, end_datetime, tractor_id, task_id, hours_used, area_covered, note, user_id, created_at, updated_at) 
-              VALUES ('$start_datetime', '$end_datetime', '$tractor_id', '$task_id', '$hours_used', '$area_covered', '$note', '$user_id', NOW(), NOW())";
-    
-    // Execute the query
-    $result = mysqli_query($con, $query);
-    
-    // Check if the insertion was successful
-    if ($result) {
-        // Redirect to daily-work.php
-        header("Location: daily-work.php");
-        exit; // Ensure that no further code is executed after redirection
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Retrieve form data
+            $start_datetime = $_POST['start_datetime'];
+            $end_datetime = $_POST['end_datetime'];
+            $tractor_id = $_POST['tractor_id'];
+            $task_id = $_POST['task_id'];
+            $hours_used = $_POST['hours_used'];
+            $area_covered = $_POST['area_covered'];
+            $note = $_POST['note'];
+
+            // Update the record in the database
+            $query_update = "UPDATE TractorUsage SET start_datetime = ?, end_datetime = ?, tractor_id = ?, task_id = ?, hours_used = ?, area_covered = ?, note = ? WHERE id = ?";
+            $stmt_update = mysqli_prepare($con, $query_update);
+            mysqli_stmt_bind_param($stmt_update, "ssiiidsi", $start_datetime, $end_datetime, $tractor_id, $task_id, $hours_used, $area_covered, $note, $record_id);
+            $result_update = mysqli_stmt_execute($stmt_update);
+
+            if ($result_update) {
+                // Record updated successfully
+                echo "Record updated successfully.";
+                header("Location: daily-work.php");
+
+            } else {
+                // Error updating record
+                echo "Error updating record: " . mysqli_error($con);
+            }
+        }
     } else {
-        echo "Error: " . mysqli_error($con);
+        // Record not found, handle the error (redirect, display message, etc.)
+        echo "Record not found.";
+        exit;
     }
+} else {
+    // Record ID is not provided in the URL, handle the error (redirect, display message, etc.)
+    echo "Record ID is missing.";
+    exit;
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -195,60 +213,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 Back
                 </button>
               </a>
-              <div class="title">DAILY WORK</div>
+              <div class="title">UPDATE WORK DETAILS</div>
                             <p class="">
-                              Fill in the details below to record daily work
+                              Fill in the details below to update daily work
                               activity.
                             </p>
                             <div class="content">
 
-
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-        <div class="user-details">
-            <div class="input-box">
-                <span class="details">Start Date & Time:</span>
-                <input type="datetime-local" id="start_datetime" name="start_datetime" required />
-            </div>
-            <div class="input-box">
-                <span class="details">End Date & Time:</span>
-                <input type="datetime-local" id="end_datetime" name="end_datetime" required />
-            </div>
-            <div class="input-box">
-                <span class="details">Tractor Number:</span>
-                <select name="tractor_number" required>
-                    <option value="">--Select Tractor Number--</option>
-                    <?php foreach ($tractor_numbers as $tractor): ?>
-                        <option value="<?php echo $tractor['TractorNumber']; ?>"><?php echo $tractor['TractorNumber']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="input-box">
-                <span class="details">Task:</span>
-                <select name="task" required>
-                    <option value="">--Select Task--</option>
-                    <?php foreach ($tasks as $task): ?>
-                        <option value="<?php echo $task['task_name']; ?>"><?php echo $task['task_name']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="input-box">
-                <span class="details">Hours Used:</span>
-                <input type="number" id="hours_used" name="hours_used" readonly />
-            </div>
-            <div class="input-box">
-                <span class="details">Area Covered (acres):</span>
-                <input type="number" name="area_covered" required />
-            </div>
-            <div class="input-box">
-                <span class="details">Note:</span>
-                <textarea name="note" cols="83" rows="4" placeholder="Enter note" class="p-2"></textarea>
-            </div>
-        </div>
-        <div class="addNewButton mt-4">
-            <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Save</button>
-        </div>
-    </form>
-                        </div>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $record_id; ?>">
+                      <div class="user-details">
+                          <div class="input-box">
+                              <span class="details">Start Date & Time:</span>
+                              <input type="datetime-local" id="start_datetime" name="start_datetime" value="<?php echo $start_datetime; ?>" required />
+                          </div>
+                          <div class="input-box">
+                              <span class="details">End Date & Time:</span>
+                              <input type="datetime-local" id="end_datetime" name="end_datetime" value="<?php echo $end_datetime; ?>" required />
+                          </div>
+                          <div class="input-box">
+                              <span class="details">Tractor Number:</span>
+                              <select id="tractor_id" name="tractor_id" required>
+                                    <?php foreach ($tractors as $tractor): ?>
+                                        <option value="<?php echo $tractor['TractorID']; ?>" <?php if ($tractor['TractorID'] == $tractor_id) echo "selected"; ?>>
+                                            <?php echo $tractor['TractorNumber']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                              </select>
+                          </div>
+                          <div class="input-box">
+                              <span class="details">Task:</span>
+                              <select id="task_id" name="task_id" required>
+                                  <?php foreach ($tasks as $task): ?>
+                                      <option value="<?php echo $task['id']; ?>" <?php if ($task['id'] == $task_id) echo "selected"; ?>>
+                                          <?php echo $task['task_name']; ?>
+                                      </option>
+                                  <?php endforeach; ?>
+                              </select>
+                          </div>
+                          <div class="input-box">
+                              <span class="details">Hours Used:</span>
+                              <input type="number" id="hours_used" name="hours_used" value="<?php echo $hours_used; ?>" readonly />
+                          </div>
+                          <div class="input-box">
+                              <span class="details">Area Covered (acres):</span>
+                              <input type="number" name="area_covered" value="<?php echo $area_covered; ?>" required />
+                          </div>
+                          <div class="input-box">
+                              <span class="details">Note:</span>
+                              <textarea name="note" cols="83" rows="4" class="p-2"><?php echo $note; ?></textarea>
+                          </div>
+                      </div>
+                      <div class="addNewButton mt-4">
+                          <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Save</button>
+                      </div>
+                </form>
+                  </div>
               </div>
           </div>  
         </div>
@@ -256,7 +275,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </section>
     <!-- CONTENT -->
 
-        <script>
+    <script>
         // Function to calculate the difference in hours between two date/time strings
         function calculateHoursDifference(startDateTime, endDateTime) {
             const start = new Date(startDateTime);

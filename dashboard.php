@@ -14,36 +14,144 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
 // User is authenticated and is an admin, continue to admin-dashboard page
 
-// Query to retrieve total number of users
-$sql_total_users = "SELECT COUNT(*) AS total_users FROM users";
-$result_total_users = mysqli_query($con, $sql_total_users);
-$row_total_users = mysqli_fetch_assoc($result_total_users);
-$total_users = $row_total_users['total_users'];
+// Get today's date
+$today = date('Y-m-d');
+$yesterday = date('Y-m-d', strtotime('-1 day'));
 
-// Query to retrieve number of active users
-$sql_active_users = "SELECT COUNT(*) AS active_users FROM users WHERE status = 'active'";
-$result_active_users = mysqli_query($con, $sql_active_users);
-$row_active_users = mysqli_fetch_assoc($result_active_users);
-$active_users = $row_active_users['active_users'];
+// Get start and end dates for this month
+$thisMonthStart = date('Y-m-01');
+$thisMonthEnd = date('Y-m-t');
 
-// Query to retrieve number of inactive users
-$sql_inactive_users = "SELECT COUNT(*) AS inactive_users FROM users WHERE status = 'inactive'";
-$result_inactive_users = mysqli_query($con, $sql_inactive_users);
-$row_inactive_users = mysqli_fetch_assoc($result_inactive_users);
-$inactive_users = $row_inactive_users['inactive_users'];
+// Get start and end dates for this year
+$thisYearStart = date('Y-01-01');
+$thisYearEnd = date('Y-12-31');
 
-// Query to retrieve recent login activity
-$sql_recent_logins = "SELECT users.name, login_history.login_time, login_history.ip_address 
-                      FROM login_history
-                      INNER JOIN users ON login_history.user_id = users.id
-                      ORDER BY login_history.login_time DESC
-                      LIMIT 4";
-$result_recent_logins = mysqli_query($con, $sql_recent_logins);
+// Query to retrieve total hours used for today
+$sql_total_hours_used_today = "SELECT SUM(hours_used) AS total_hours_used_today FROM TractorUsage WHERE DATE(start_datetime) = '$today'";
+$result_total_hours_used_today = mysqli_query($con, $sql_total_hours_used_today);
+$row_total_hours_used_today = mysqli_fetch_assoc($result_total_hours_used_today);
+$total_hours_used_today = $row_total_hours_used_today['total_hours_used_today'];
 
-// Query to retrieve statistics from tractorusage table
-$sql_tractorusage_stats = "SELECT COUNT(*) AS total_records, AVG(hours_used) AS avg_hours_used, SUM(area_covered) AS total_area_covered FROM tractorusage";
-$result_tractorusage_stats = mysqli_query($con, $sql_tractorusage_stats);
-$row_tractorusage_stats = mysqli_fetch_assoc($result_tractorusage_stats);
+
+// Query to retrieve the total number of tractors recorded work today
+$sql_total_tractors_recorded_work_today = "SELECT COUNT(DISTINCT tractor_id) AS total_tractors_recorded_work_today 
+                                           FROM TractorUsage 
+                                           WHERE DATE(start_datetime) = CURDATE()";
+$result_total_tractors_recorded_work_today = mysqli_query($con, $sql_total_tractors_recorded_work_today);
+$row_total_tractors_recorded_work_today = mysqli_fetch_assoc($result_total_tractors_recorded_work_today);
+$total_tractors_recorded_work_today = $row_total_tractors_recorded_work_today['total_tractors_recorded_work_today'];
+
+// Query to retrieve total area covered today
+$sql_total_area_covered_today = "SELECT SUM(area_covered) AS total_area_covered_today FROM TractorUsage WHERE DATE(start_datetime) = CURDATE()";
+$result_total_area_covered_today = mysqli_query($con, $sql_total_area_covered_today);
+$row_total_area_covered_today = mysqli_fetch_assoc($result_total_area_covered_today);
+$total_area_covered_today = $row_total_area_covered_today['total_area_covered_today'];
+
+// Query to retrieve total number of users who recorded work today
+$sql_total_users_recorded_work_today = "SELECT COUNT(DISTINCT user_id) AS total_users_recorded_work 
+                                        FROM TractorUsage 
+                                        WHERE DATE(created_at) = '$today'";
+$result_total_users_recorded_work_today = mysqli_query($con, $sql_total_users_recorded_work_today);
+$row_total_users_recorded_work_today = mysqli_fetch_assoc($result_total_users_recorded_work_today);
+$total_users_recorded_work_today = $row_total_users_recorded_work_today['total_users_recorded_work'];
+
+// Query to retrieve total number of tractors
+$sql_total_tractors = "SELECT COUNT(*) AS total_tractors FROM tractors";
+$result_total_tractors = mysqli_query($con, $sql_total_tractors);
+$row_total_tractors = mysqli_fetch_assoc($result_total_tractors);
+$total_tractors = $row_total_tractors['total_tractors'];
+
+// Query to retrieve total hours used for yesterday
+$sql_total_hours_used_yesterday = "SELECT SUM(hours_used) AS total_hours_used_yesterday FROM TractorUsage WHERE DATE(start_datetime) = '$yesterday'";
+$result_total_hours_used_yesterday = mysqli_query($con, $sql_total_hours_used_yesterday);
+$row_total_hours_used_yesterday = mysqli_fetch_assoc($result_total_hours_used_yesterday);
+$total_hours_used_yesterday = $row_total_hours_used_yesterday['total_hours_used_yesterday'];
+
+// Query to retrieve the total number of tractors recorded work yesterday
+$sql_total_tractors_recorded_work_yesterday = "SELECT COUNT(DISTINCT tractor_id) AS total_tractors_recorded_work_yesterday 
+                                               FROM TractorUsage 
+                                               WHERE DATE(start_datetime) = CURDATE() - INTERVAL 1 DAY";
+$result_total_tractors_recorded_work_yesterday = mysqli_query($con, $sql_total_tractors_recorded_work_yesterday);
+$row_total_tractors_recorded_work_yesterday = mysqli_fetch_assoc($result_total_tractors_recorded_work_yesterday);
+$total_tractors_recorded_work_yesterday = $row_total_tractors_recorded_work_yesterday['total_tractors_recorded_work_yesterday'];
+
+// Query to retrieve total area covered for yesterday
+$sql_total_area_covered_yesterday = "SELECT SUM(area_covered) AS total_area_covered FROM TractorUsage WHERE DATE(start_datetime) = '$yesterday'";
+$result_total_area_covered_yesterday = mysqli_query($con, $sql_total_area_covered_yesterday);
+$row_total_area_covered_yesterday = mysqli_fetch_assoc($result_total_area_covered_yesterday);
+$total_area_covered_yesterday = $row_total_area_covered_yesterday['total_area_covered'];
+
+// Query to retrieve total number of users who recorded work yesterday
+$sql_total_users_recorded_work_yesterday = "SELECT COUNT(DISTINCT user_id) AS total_users_recorded_work 
+                                        FROM TractorUsage 
+                                        WHERE DATE(created_at) = '$yesterday'";
+$result_total_users_recorded_work_yesterday = mysqli_query($con, $sql_total_users_recorded_work_yesterday);
+$row_total_users_recorded_work_yesterday = mysqli_fetch_assoc($result_total_users_recorded_work_yesterday);
+$total_users_recorded_work_yesterday = $row_total_users_recorded_work_yesterday['total_users_recorded_work'];
+
+
+// Query to retrieve the total number of tractors recorded work for this month
+$sql_total_tractors_recorded_work_this_month = "SELECT COUNT(DISTINCT tractor_id) AS total_tractors_recorded_work_this_month 
+                                                FROM TractorUsage 
+                                                WHERE MONTH(start_datetime) = MONTH(CURDATE()) 
+                                                AND YEAR(start_datetime) = YEAR(CURDATE())";
+$result_total_tractors_recorded_work_this_month = mysqli_query($con, $sql_total_tractors_recorded_work_this_month);
+$row_total_tractors_recorded_work_this_month = mysqli_fetch_assoc($result_total_tractors_recorded_work_this_month);
+$total_tractors_recorded_work_this_month = $row_total_tractors_recorded_work_this_month['total_tractors_recorded_work_this_month'];
+
+// Query to retrieve total hours used for this month
+$sql_total_hours_used_this_month = "SELECT SUM(hours_used) AS total_hours_used FROM TractorUsage WHERE DATE(start_datetime) BETWEEN '$thisMonthStart' AND '$thisMonthEnd'";
+$result_total_hours_used_this_month = mysqli_query($con, $sql_total_hours_used_this_month);
+$row_total_hours_used_this_month = mysqli_fetch_assoc($result_total_hours_used_this_month);
+$total_hours_used_this_month = $row_total_hours_used_this_month['total_hours_used'];
+
+// Query to retrieve total area covered for this month
+$sql_total_area_covered_this_month = "SELECT SUM(area_covered) AS total_area_covered FROM TractorUsage WHERE DATE(start_datetime) BETWEEN '$thisMonthStart' AND '$thisMonthEnd'";
+$result_total_area_covered_this_month = mysqli_query($con, $sql_total_area_covered_this_month);
+$row_total_area_covered_this_month = mysqli_fetch_assoc($result_total_area_covered_this_month);
+$total_area_covered_this_month = $row_total_area_covered_this_month['total_area_covered'];
+
+// Query to retrieve total number of users who recorded work this month
+$sql_total_users_recorded_work_this_month = "SELECT COUNT(DISTINCT user_id) AS total_users_recorded_work 
+                                        FROM TractorUsage 
+                                        WHERE DATE(created_at) BETWEEN '$thisMonthStart' AND '$thisMonthEnd'";
+$result_total_users_recorded_work_this_month = mysqli_query($con, $sql_total_users_recorded_work_this_month);
+$row_total_users_recorded_work_this_month = mysqli_fetch_assoc($result_total_users_recorded_work_this_month);
+$total_users_recorded_work_this_month = $row_total_users_recorded_work_this_month['total_users_recorded_work'];
+
+// Query to retrieve the total number of tractors recorded work for this year
+$sql_total_tractors_recorded_work_this_year = "SELECT COUNT(DISTINCT tractor_id) AS total_tractors_recorded_work_this_year 
+                                               FROM TractorUsage 
+                                               WHERE YEAR(start_datetime) = YEAR(CURDATE())";
+$result_total_tractors_recorded_work_this_year = mysqli_query($con, $sql_total_tractors_recorded_work_this_year);
+$row_total_tractors_recorded_work_this_year = mysqli_fetch_assoc($result_total_tractors_recorded_work_this_year);
+$total_tractors_recorded_work_this_year = $row_total_tractors_recorded_work_this_year['total_tractors_recorded_work_this_year'];
+
+// Query to retrieve total hours used for this year
+$sql_total_hours_used_this_year = "SELECT SUM(hours_used) AS total_hours_used FROM TractorUsage WHERE DATE(start_datetime) BETWEEN '$thisYearStart' AND '$thisYearEnd'";
+$result_total_hours_used_this_year = mysqli_query($con, $sql_total_hours_used_this_year);
+$row_total_hours_used_this_year = mysqli_fetch_assoc($result_total_hours_used_this_year);
+$total_hours_used_this_year = $row_total_hours_used_this_year['total_hours_used'];
+
+// Query to retrieve total area covered for this year
+$sql_total_area_covered_this_year = "SELECT SUM(area_covered) AS total_area_covered FROM TractorUsage WHERE DATE(start_datetime) BETWEEN '$thisYearStart' AND '$thisYearEnd'";
+$result_total_area_covered_this_year = mysqli_query($con, $sql_total_area_covered_this_year);
+$row_total_area_covered_this_year = mysqli_fetch_assoc($result_total_area_covered_this_year);
+$total_area_covered_this_year = $row_total_area_covered_this_year['total_area_covered'];
+
+// Query to retrieve total number of users who recorded work this year
+$sql_total_users_recorded_work_this_year = "SELECT COUNT(DISTINCT user_id) AS total_users_recorded_work 
+                                        FROM TractorUsage 
+                                        WHERE DATE(created_at) BETWEEN '$thisYearStart' AND '$thisYearEnd'";
+$result_total_users_recorded_work_this_year = mysqli_query($con, $sql_total_users_recorded_work_this_year);
+$row_total_users_recorded_work_this_year = mysqli_fetch_assoc($result_total_users_recorded_work_this_year);
+$total_users_recorded_work_this_year = $row_total_users_recorded_work_this_year['total_users_recorded_work'];
+
+// Query to retrieve total number of tractors
+$sql_total_tractors_this_year = "SELECT COUNT(*) AS total_tractors FROM tractors";
+$result_total_tractors_this_year = mysqli_query($con, $sql_total_tractors_this_year);
+$row_total_tractors_this_year = mysqli_fetch_assoc($result_total_tractors_this_year);
+$total_tractors_this_year = $row_total_tractors_this_year['total_tractors'];
 
 // Display the dashboard
 ?>
@@ -163,126 +271,363 @@ $row_tractorusage_stats = mysqli_fetch_assoc($result_tractorusage_stats);
         </div>
       </div>
 
-      <div class="container">
-        <h4 class="mt-5 mb-2 dashboard-title">TRACTOR USAGE STATISTICS</h4>
+      <section class="container">
 
-    <main class="mb-5">
+      <div class="container">
+
+<!-- <main class="padding1">
+<h4 class="mt-4 mb-2 dashboard-title">TRACTORS USED</h4>
+
+<div class="row row-cols-1 row-cols-md-5">
+  <div class="card ms-3 me-4"> 
+  <div class="card-header">
+    TODAY
+  </div>
+  <div class="card-body">
+    <?php if (empty($total_tractors_recorded_work_today)): ?>
+    <h3>0</h3>
+<?php else: ?>
+    <h3><?php echo $total_tractors_recorded_work_today; ?></h3>
+<?php endif; ?>
+
+    </div>
+</div>
+
+<div class="card me-4">
+  <div class="card-header ">
+    YESTERDAY
+  </div>
+  <div class="card-body">
+       <?php if (empty($tractors_used_yesterday)): ?>
+                <h3>0</h3>
+            <?php else: ?>
+                <?php foreach ($tractors_used_yesterday as $tractor): ?>
+                    <h5><?php echo $tractor['TractorNumber']; ?></h5>
+                <?php endforeach; ?>
+            <?php endif; ?>
+  </div>
+</div>
+
+          <div class="card me-4">
+  <div class="card-header">
+    THIS MONTH
+  </div>
+  <div class="card-body">
+          <?php if (empty($tractors_used_this_month)): ?>
+                <h3>0</h3>
+            <?php else: ?>
+                <?php foreach ($tractors_used_this_month as $tractor): ?>
+                    <h5><?php echo $tractor['TractorNumber']; ?></h5>
+                <?php endforeach; ?>
+            <?php endif; ?>
+  </div>
+</div>
+
+          <div class="card">
+  <div class="card-header">
+    THIS YEAR
+  </div>
+  <div class="card-body">
+          <?php if (empty($tractors_used_this_year)): ?>
+                <h3>0</h3>
+            <?php else: ?>
+                <?php foreach ($tractors_used_this_year as $tractor): ?>
+                    <h5><?php echo $tractor['TractorNumber']; ?></h5>
+                <?php endforeach; ?>
+            <?php endif; ?>
+  </div>
+</div>       
+        </div>
+</main> -->
+<h4 class="dashboard-titles mb-3">TRACTOR USAGE STATISTICS</h4>
+
+<main class="mb-4 box1">
+    <h4 class="dashboard-title">TODAY</h4>
       <ul class="box-info">
 				<li>
-            <i class='bx bx-border-all'></i>
+            <i class='bx bxs-dashboard'></i>
 					  <span class="text">					
-					  <h3><?php echo $row_tractorusage_stats['total_records']; ?></h3>
-            <p>Total Records</p>
-
+            <p>TRACTORS USED</p>
+       <?php if (empty($total_tractors_recorded_work_today)): ?>
+        <h3>0</h3>
+        <?php else: ?>
+            <h3><?php echo $total_tractors_recorded_work_today; ?></h3>
+        <?php endif; ?>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-watch'></i>
 					<span class="text">
-						<h3><?php echo $row_tractorusage_stats['avg_hours_used']; ?> hours</h3>
-						<p>Average Hours Used</p>
+						<p>HOURS USED</p>
+            <?php if (empty($total_hours_used_today)): ?>
+              <h5>0</h5>
+            <?php else: ?>
+              <h5><?php echo $total_hours_used_today; ?></h5>
+            <?php endif; ?>
 					</span>
 				</li>
 				<li>
-					<i class='bx bxs-disc'></i>
+					<i class='bx bxs-area'></i>
 					<span class="text">
-						<h3><?php echo $row_tractorusage_stats['total_area_covered']; ?> m²</h3>
-						<p>Total Area Covered</p>
+						<p>AREA COVERED</p>
+                <?php if (empty($total_area_covered_today)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_area_covered_today; ?></h5>
+                <?php endif; ?>
+					</span>
+				</li>
+        		<li>
+					<i class='bx bxs-user'></i>
+					<span class="text">
+                  <p>TOTAL USERS</p>
+                <?php if (empty($total_users_recorded_work_today)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_users_recorded_work_today; ?></h5>
+                <?php endif; ?>
 					</span>
 				</li>
 			</ul>
-    </main>
+</main>
 
-        <div class="row">
+<main class="mb-4 box1">
+    <h4 class="dashboard-title">YESTERDAY</h4>
+      <ul class="box-info">
+				<li>
+            <i class='bx bxs-dashboard'></i>
+					  <span class="text">					
+            <p>TRACTORS USED</p>
+                 <?php if (empty($total_tractors_recorded_work_yesterday)): ?>
+                <h3>0</h3>
+                <?php else: ?>
+                    <h3><?php echo $total_tractors_recorded_work_yesterday; ?></h3>
+                <?php endif; ?>
+ 				</span>
+				</li>
+				<li>
+					<i class='bx bxs-watch'></i>
+					<span class="text">
+						<p>HOURS USED</p>
+            <?php if (empty($total_hours_used_yesterday)): ?>
+            <h5>0</h5>
+            <?php else: ?>
+              <h5><?php echo $total_hours_used_yesterday; ?></h5>
+            <?php endif; ?>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-area'></i>
+					<span class="text">
+                <p>AREA COVERED</p>
+                <?php if (empty($total_area_covered_yesterday)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_area_covered_yesterday; ?></h5>
+                <?php endif; ?>
+					</span>
+				</li>
+        		<li>
+					<i class='bx bxs-user'></i>
+					<span class="text">
+                <p>TOTAL USERS</p>
+                <?php if (empty($total_users_recorded_work_yesterday)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_users_recorded_work_yesterday; ?></h5>
+                <?php endif; ?>
+					</span>
+				</li>
+			</ul>
+</main>
+
+    <!-- area covered -->
+  <main class="mb-4 box1">
+    <h4 class="dashboard-title">THIS MONTH</h4>
+
+    <ul class="box-info">
+        <!-- Today -->
+        <li>
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">
+                <p>TRACTORS USED</p>
+          <?php if (empty($total_tractors_recorded_work_this_month)): ?>
+              <h3>0</h3>
+          <?php else: ?>
+              <h3><?php echo $total_tractors_recorded_work_this_month; ?></h3>
+          <?php endif; ?>      
+            </span>
+        </li>
+
+        <!-- Yesterday -->
+        <li>
+            <i class='bx bxs-watch'></i>
+            <span class="text">
+              <p>HOURS USED</p>
+            <?php if (empty($total_hours_used_this_month)): ?>
+              <h5>0</h5>
+            <?php else: ?>
+              <h5><?php echo $total_hours_used_this_month; ?></h5>
+            <?php endif; ?>
+            </span>
+        </li>
+
+        <!-- This Month -->
+        <li>
+            <i class='bx bxs-area'></i>
+            <span class="text">
+                <p>AREA COVERED</p>
+                <?php if (empty($total_area_covered_this_month)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_area_covered_this_month; ?></h5>
+                <?php endif; ?>
+            </span>
+        </li>
+
+        <!-- This Year -->
+        <li>
+            <i class='bx bxs-user'></i>
+            <span class="text">
+                <p>TOTAL USERS</p>
+                <?php if (empty($total_users_recorded_work_this_month)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_users_recorded_work_this_month; ?></h5>
+                <?php endif; ?>
+            </span>
+        </li>
+    </ul>
+</main>
+
+<!-- this year -->
+<main class="mb-5 box1">
+    <h4 class="dashboard-title">THIS YEAR</h4>
+
+    <ul class="box-info">
+        <li>
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">
+            <p>TRACTORS USED</p>
+          <?php if (empty($total_tractors_recorded_work_this_year)): ?>
+              <h3>0</h3>
+          <?php else: ?>
+              <h3><?php echo $total_tractors_recorded_work_this_year; ?></h3>
+          <?php endif; ?>
+            </span>
+        </li>
+
+        <li>
+            <i class='bx bxs-watch'></i>
+            <span class="text">
+            <p>HOURS USED</p>
+            <?php if (empty($total_hours_used_this_year)): ?>
+              <h5>0</h5>
+            <?php else: ?>
+              <h5><?php echo $total_hours_used_this_year; ?></h5>
+            <?php endif; ?>
+            </span>
+        </li>
+
+        <li>
+            <i class='bx bxs-area'></i>
+            <span class="text">
+                <p>AREA COVERED</p>
+                <?php if (empty($total_area_covered_this_year)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_area_covered_this_year; ?></h5>
+                <?php endif; ?>
+            </span>
+        </li>
+
+        <li>
+            <i class='bx bxs-user'></i>
+            <span class="text">
+                <p>TOTAL USERS</p>
+                <?php if (empty($total_users_recorded_work_this_year)): ?>
+                    <h5>0</h5>
+                <?php else: ?>
+                    <h5><?php echo $total_users_recorded_work_this_year; ?></h5>
+                <?php endif; ?>
+            </span>
+        </li>
+    </ul>
+</main>
+
+
+</section>
+       <!-- <div class="row">
           <div class="col-md-6 ">
             <div class="card mb-3 " style="max-width: 38rem;">
             <div class="card-header dashboard-one">
-              <h2>USER STATISTICS</h2>
+              <h2>COMPARISON OF DATA - TODAY & YESTERDAY</h2>
             </div>
             <div class="card-body text-secondary">
-              <canvas id="userStatisticsChart" width="400" height="143"></canvas>
+              <canvas id="myChart" width="400" height="143"></canvas>
             </div>
             </div>
           </div>
 
-          <div class="col-md-6">
-            <div class="row">
-            <div class="dashboard col-12">
-            <div class="card mb-3" style="max-width: 30rem;">
-            <div class="card-header dashboard-two">
-              <h2>RECENT LOGINS</h2>
-            </div>
-              <table class="content-table">
-                        <thead>
-                          <tr>
-                            <th>Name</th>
-                            <th>Timestamp</th>
-                            <th>IP Address</th>                       
-                          </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = mysqli_fetch_assoc($result_recent_logins)): ?>
-                        <tr>
-                        <td><?php echo $row['name']; ?></td>
-                        <td><?php echo $row['login_time']; ?></td>
-                        <td><?php echo $row['ip_address']; ?></td>
-                        </tr>
-                            <?php endwhile; ?>                                   
-                        </tbody>
-                      </table>
-                        </div>
-                      </div>
-
-                </div>
-          </div>
           </div>
         </div>
-      </div>
-    </section>
+      </div> -->
 
+
+      
+    </section>
     <!-- CONTENT -->
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    
+<script>
+    // Get the PHP data
+    var todayData = {
+        totalHoursUsed: <?php echo empty($total_hours_used) ? 0 : $total_hours_used; ?>,
+        totalAreaCovered: <?php echo empty($total_area_covered) ? 0 : $total_area_covered; ?>,
+        totalUsers: <?php echo empty($total_users_recorded_work_today) ? 0 : $total_users_recorded_work_today; ?>,
+        totalTractors: <?php echo empty($total_tractors) ? 0 : $total_tractors; ?>
+    };
 
-    <script>
-    // Get user statistics data from PHP
-    var totalUsers = <?php echo $total_users; ?>;
-    var activeUsers = <?php echo $active_users; ?>;
-    var inactiveUsers = <?php echo $inactive_users; ?>;
+    var yesterdayData = {
+        totalHoursUsed: <?php echo empty($total_hours_used_yesterday) ? 0 : $total_hours_used_yesterday; ?>,
+        totalAreaCovered: <?php echo empty($total_area_covered_yesterday) ? 0 : $total_area_covered_yesterday; ?>,
+        totalUsers: <?php echo empty($total_users_recorded_work_yesterday) ? 0 : $total_users_recorded_work_yesterday; ?>,
+        totalTractors: <?php echo empty($total_tractors_yesterday) ? 0 : $total_tractors_yesterday; ?>
+    };
 
-    // Create the user statistics chart
-    var ctx = document.getElementById('userStatisticsChart').getContext('2d');
-    var userStatisticsChart = new Chart(ctx, {
+    // Create the bar chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Total Users', 'Active Users', 'Inactive Users'],
+            labels: ['Total Hours Used', 'Total Area Covered', 'Total Users', 'Total Tractors'],
             datasets: [{
-                label: 'User Statistics',
-                data: [totalUsers, activeUsers, inactiveUsers],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)', // Red for total users
-                    'rgba(54, 162, 235, 0.5)', // Blue for active users
-                    'rgba(255, 206, 86, 0.5)' // Yellow for inactive users
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)'
-                ],
-                borderWidth: 1
+                label: 'Today',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                data: [todayData.totalHoursUsed, todayData.totalAreaCovered, todayData.totalUsers, todayData.totalTractors]
+            }, {
+                label: 'Yesterday',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                data: [yesterdayData.totalHoursUsed, yesterdayData.totalAreaCovered, yesterdayData.totalUsers, yesterdayData.totalTractors]
             }]
         },
         options: {
             scales: {
-                y: {
-                    beginAtZero: true
-                }
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
             }
         }
     });
-    </script>
+</script>
+
 
     <script src="assets/js/script.js"></script>
 

@@ -13,12 +13,35 @@ if (!isset($_SESSION['user_id'])) {
 // Retrieve the logged-in user's ID from the session
 $user_id = $_SESSION['user_id'];
 
-// Fetch tractor usage records for the logged-in user
-$query = "SELECT tu.start_datetime, tu.hours_used, tu.area_covered, t.TractorNumber, tsk.task_name 
+// Initialize variables for search
+$start_date = "";
+$end_date = "";
+$search_query = "";
+
+// Process search form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize input dates
+    $start_date = mysqli_real_escape_string($con, $_POST['start_date']);
+    $end_date = mysqli_real_escape_string($con, $_POST['end_date']);
+    
+    // Construct the search query
+    if (!empty($start_date) && !empty($end_date)) {
+        $search_query = "AND DATE(tu.start_datetime) BETWEEN '$start_date' AND '$end_date'";
+    } elseif (!empty($start_date)) {
+        $search_query = "AND DATE(tu.start_datetime) >= '$start_date'";
+    } elseif (!empty($end_date)) {
+        $search_query = "AND DATE(tu.start_datetime) <= '$end_date'";
+    }
+}
+
+// Fetch tractor usage records for the logged-in user, including search criteria
+$query = "SELECT tu.id, tu.start_datetime, tu.hours_used, tu.area_covered, t.TractorNumber, tsk.task_name 
           FROM TractorUsage tu
           INNER JOIN Tractors t ON tu.tractor_id = t.TractorID
           INNER JOIN tasks tsk ON tu.task_id = tsk.id
-          WHERE tu.user_id = $user_id";
+          WHERE tu.user_id = $user_id
+          $search_query
+          ORDER BY tu.start_datetime DESC"; // Order by start_datetime to get the latest record first
 $result = mysqli_query($con, $query);
 
 if (!$result) {
@@ -26,7 +49,6 @@ if (!$result) {
     die("Error fetching records: " . mysqli_error($con));
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -156,118 +178,103 @@ if (!$result) {
             <div>
               <div class="card">
                 <div class="card-header">
-                  <h2>VIEW DAILY WORK</h2>
-                  <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-3 mt-4">
-                      <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Click to Filter
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="#">Weekly</a></li>
-                          <li><a class="dropdown-item" href="#">Monthly</a></li>
-                          <li><a class="dropdown-item" href="#">Yearly</a></li>
-                        </ul>
-                      </div>                    
+                  <h2 class="mb-4">VIEW DAILY WORK</h2>
+                  <form class="row" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                    <div class="col-lg-3">
+                        <div class="row user-details">
+                          <div class="col-md-6 input-box">
+                            <p>Start Date:</p>
+                            <input type="date" name="start_date" id="start_date" value="<?php echo $start_date; ?>">
+                          </div>
+                          <div class="col-md-6 input-box">
+                            <p>End Date:</p>
+                            <input type="date" name="end_date" id="end_date" value="<?php echo $end_date; ?>">
+                          </div>
+                        </div>                
                     </div>
-                    <div class="col-lg-4 mt-4">
+
+                    <div class="buttonSample col-lg-1 mt-4 pt-3">
+                      <a href="add-daily-work.php">
+                      <button
+                        type="submit"
+                        class="btn btn-secondary rounded me-3 mb-2"
+                      >
+                        Search
+                      </button>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-2"></div>
+
+                    <div class="col-lg-4 mt-4 pt-3">
                       <div class="input-group mb-3">
                         <input
                           type="text"
                           class="form-control"
                           placeholder="Search.."
                         />
-                        <button class="btn btn-primary" type="button">
+                        <button class="btn btn-secondary" type="button">
                           Find
                         </button>
                       </div>
                     </div>
 
-                    <!-- Button trigger modal for adding daily work -->
-                    <div class="addNewButton col-lg-2 mt-4">
+                    <!-- Button for adding daily work -->
+                    <div class="addNewButton col-lg-2 mt-4 pt-3">
                       <a href="add-daily-work.php">
                       <button
                         type="button"
                         class="btn btn-secondary rounded me-3 mb-2"
                       >
+                      <i class='bx bx-calendar-check me-2'></i>
                         Add New
                       </button>
                       </a>
                     </div>
-                  </div>
+                  </form>
                 </div>
 
-                <!-- USER DETAILS TABLE STARTS -->
-           <table class="content-table">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Task</th>
-            <th>Hours Used</th>
-            <th>Area Covered (m)</th>
-            <th>Tractor Number</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Loop through each tractor usage record and display it in a table row
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo '<tr>';
-            echo '<td>' . $row['start_datetime'] . '</td>';
-            echo '<td>' . $row['task_name'] . '</td>';
-            echo '<td>' . $row['hours_used'] . '</td>';
-            echo '<td>' . $row['area_covered'] . '</td>';
-            echo '<td>' . $row['TractorNumber'] . '</td>';
-            echo '</tr>';
-        }
-        ?>
-    </tbody>
-</table>
-                <!-- USER DETAILS TABLE ENDS -->
+              <!-- TRACTOR USAGE TABLE STARTS -->
 
-                <!-- Modal for adding daily work  activity-->
-                <div
-                  class="modal fade"
-                  id="userModal"
-                  tabindex="-1"
-                  aria-labelledby="addNewUser"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addNewUser">
-                          Add New Task
-                        </h1>
-                        <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div class="modal-body">
-                        <!-- INPUT MODAL DETAILS FOR TASK STARTS -->
-                        <div id="signUp">
-                          <div class="signup-container">
-                            <div class="title">DAILY WORK</div>
-                            <p class="">
-                              Fill in the details below to record daily work
-                              activity.
-                            </p>
-                            <div class="content">
+              <table class="content-table">
+                  <thead>
+                      <tr>
+                          <th>Date</th>
+                          <th>Task</th>
+                          <th>Hours Used</th>
+                          <th>Area Covered (Acres)</th>
+                          <th>Tractor Number</th>
+                          <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <?php
+                      // Loop through each tractor usage record and display it in a table row
+                      $latest_record = null; // Initialize variable to hold the latest record
+                      while ($row = mysqli_fetch_assoc($result)) {
+                          // Store the latest record
+                          if (!$latest_record) {
+                              $latest_record = $row;
+                          }
+                          echo '<tr>';
+                          echo '<td>' . $row['start_datetime'] . '</td>';
+                          echo '<td>' . $row['task_name'] . '</td>';
+                          echo '<td>' . $row['hours_used'] . '</td>';
+                          echo '<td>' . $row['area_covered'] . '</td>';
+                          echo '<td>' . $row['TractorNumber'] . '</td>';
+                          // If this is the latest record, display the edit button
+                          if ($latest_record && $latest_record['id'] === $row['id']) {
+                              echo '<td><a href="update-daily-work.php?id=' . $latest_record['id'] . '"><button class="btn btn-sm btn-info">Edit</button></a></td>';
+                          } else {
+                              echo '<td></td>'; // Empty cell for non-latest records
+                          }
+                          echo '</tr>';
+                      }
+                      ?>
+                  </tbody>
+              </table>
 
-                            </div>
-                          </div>
-                        </div>
-                        <!-- INPUT MODAL DETAILS FOR TASK ENDS -->
-                      </div>
-
-                  
-                    </div>
-                  </div>
-                </div>
+              <!-- TRACTOR USAGE DETAILS TABLE ENDS -->
               </div>
             </div>
           </div>
