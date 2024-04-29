@@ -278,7 +278,7 @@ $total_tractors_this_year = $row_total_tractors_this_year['total_tractors'];
         <h4 class="dashboard-titles mb-3">TRACTOR USAGE STATISTICS</h4>
 
         <!-- today -->
-        <main class="mb-4 box1">
+        <main class="mb-4 box1">`
             <h4 class="dashboard-title">TODAY</h4>
             <ul class="box-info">
                         <li>
