@@ -34,14 +34,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Fetch tractor usage records for the logged-in user, including search criteria
+// Set the number of records per page
+$records_per_page = 10;
+
+// Determine current page number
+$current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Calculate the offset for the SQL query
+$offset = ($current_page - 1) * $records_per_page;
+
+// Fetch total number of records for the logged-in user, including search criteria
+$total_records_query = "SELECT COUNT(*) AS total_records
+                        FROM TractorUsage tu
+                        INNER JOIN Tractors t ON tu.tractor_id = t.TractorID
+                        INNER JOIN tasks tsk ON tu.task_id = tsk.id
+                        WHERE tu.user_id = $user_id
+                        $search_query";
+$total_records_result = mysqli_query($con, $total_records_query);
+$total_records_row = mysqli_fetch_assoc($total_records_result);
+$total_records = $total_records_row['total_records'];
+
+// Calculate total pages
+$total_pages = ceil($total_records / $records_per_page);
+
+// Fetch tractor usage records for the logged-in user, including search criteria and pagination
 $query = "SELECT tu.id, tu.start_datetime, tu.hours_used, tu.area_covered, t.TractorNumber, tsk.task_name 
           FROM TractorUsage tu
           INNER JOIN Tractors t ON tu.tractor_id = t.TractorID
           INNER JOIN tasks tsk ON tu.task_id = tsk.id
           WHERE tu.user_id = $user_id
           $search_query
-          ORDER BY tu.start_datetime DESC"; // Order by start_datetime to get the latest record first
+          ORDER BY tu.start_datetime DESC
+          LIMIT $records_per_page OFFSET $offset"; // Apply pagination
 $result = mysqli_query($con, $query);
 
 if (!$result) {
@@ -49,6 +73,7 @@ if (!$result) {
     die("Error fetching records: " . mysqli_error($con));
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -145,8 +170,6 @@ if (!$result) {
         </li>
     </ul>
   </section>
-
-
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->
@@ -172,13 +195,12 @@ if (!$result) {
           <p class="lead">Efficiently manage your tractor fleet with ease.</p>
         </div>
 
-        <!-- User Section -->
         <div>
           <div class="row">
             <div>
               <div class="card">
                 <div class="card-header">
-                  <h2 class="mb-4">VIEW DAILY WORK</h2>
+                  <h2 class="mb-4">DAILY WORK</h2>
                   <form class="row" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                     <div class="col-lg-3">
                         <div class="row user-details">
@@ -193,7 +215,7 @@ if (!$result) {
                         </div>                
                     </div>
 
-                    <div class="buttonSample col-lg-1 mt-4 pt-3">
+                    <div class="buttonSample col-lg-1 pt-1 smallPadding">
                       <a href="add-daily-work.php">
                       <button
                         type="submit"
@@ -206,7 +228,7 @@ if (!$result) {
 
                     <div class="col-lg-2"></div>
 
-                    <div class="col-lg-4 mt-4 pt-3">
+                    <div class="col-lg-4 smallPadding searchSmall">
                       <div class="input-group mb-3">
                         <input
                           type="text"
@@ -220,7 +242,7 @@ if (!$result) {
                     </div>
 
                     <!-- Button for adding daily work -->
-                    <div class="addNewButton col-lg-2 mt-4 pt-3">
+                    <div class="addNewButton col-lg-2 smallPadding">
                       <a href="add-daily-work.php">
                       <button
                         type="button"
@@ -236,12 +258,14 @@ if (!$result) {
 
               <!-- TRACTOR USAGE TABLE STARTS -->
 
-              <table class="content-table">
+            <section id="table" class="container">
+              <div class="row">
+                <table class="content-table">
                   <thead>
                       <tr>
                           <th>Date</th>
                           <th>Task</th>
-                          <th>Hours Used</th>
+                          <th>Minutes Used</th>
                           <th>Area Covered (Acres)</th>
                           <th>Tractor Number</th>
                           <th>Action</th>
@@ -273,8 +297,29 @@ if (!$result) {
                       ?>
                   </tbody>
               </table>
-
+              </div>
+         
+            </section>
               <!-- TRACTOR USAGE DETAILS TABLE ENDS -->
+            
+                <!-- Pagination -->
+                <!-- <div class="pagination-container">
+                    <div class="pagination">
+                        <?php if ($current_page > 1) : ?>
+                            <a href="?page=<?php echo $current_page - 1; ?>"><i class='bx bx-left-arrow-alt'></i> Previous</a>
+                        <?php endif; ?>
+                        <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
+                            <?php if ($i == $current_page) : ?>
+                                <span class="current-page"><?php echo $i; ?></span>
+                            <?php else : ?>
+                                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        <?php if ($current_page < $total_pages) : ?>
+                            <a href="?page=<?php echo $current_page + 1; ?>">Next <i class='bx bx-right-arrow-alt'></i></a>
+                        <?php endif; ?>
+                    </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -282,6 +327,7 @@ if (!$result) {
       </div>
     </section>
     <!-- CONTENT -->
+    
 
     <!-- Link to custom JS file -->
     <script src="assets/js/script.js"></script>

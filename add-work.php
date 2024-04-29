@@ -186,51 +186,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                               activity.
                             </p>
                             <div class="content">
-                           <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-    <div class="user-details">
-        <div class="input-box">
-            <span class="details">Start Date & Time:</span>
-            <input type="datetime-local" name="start_datetime" required />
-        </div>
-        <div class="input-box">
-            <span class="details">End Date & Time:</span>
-            <input type="datetime-local" name="end_datetime" required />
-        </div>
-        <div class="input-box">
-            <span class="details">Tractor Number:</span>
-            <select name="tractor_number" required>
-                <option value="">--Select Tractor Number--</option>
-                <?php foreach ($tractor_numbers as $tractor): ?>
-                    <option value="<?php echo $tractor['TractorNumber']; ?>"><?php echo $tractor['TractorNumber']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="input-box">
-            <span class="details">Task:</span>
-            <select name="task" required>
-                <option value="">--Select Task--</option>
-                <?php foreach ($tasks as $task): ?>
-                    <option value="<?php echo $task['task_name']; ?>"><?php echo $task['task_name']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="input-box">
-            <span class="details">Hours Used:</span>
-            <input type="number" name="hours_used" required />
-        </div>
-        <div class="input-box">
-            <span class="details">Area Covered:</span>
-            <input type="number" name="area_covered" required />
-        </div>
-        <div class="input-box">
-            <span class="details">Note:</span>
-            <textarea name="note" cols="83" rows="4" placeholder="Enter message" class="p-2"></textarea>
-        </div>
-    </div>
-    <div class="addNewButton mt-4">
-        <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Save</button>
-    </div>
-</form>
+                            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                                    <div class="user-details">
+                                        <div class="input-box">
+                                            <span class="details">Start Date & Time:</span>
+                                            <input type="datetime-local" name="start_datetime" required />
+                                        </div>
+                                        <div class="input-box">
+                                            <span class="details">End Date & Time:</span>
+                                            <input type="datetime-local" name="end_datetime" required />
+                                        </div>
+                                        <div class="input-box">
+                                            <span class="details">Tractor Number:</span>
+                                            <select name="tractor_number" required>
+                                                <option value="">--Select Tractor Number--</option>
+                                                <?php foreach ($tractor_numbers as $tractor): ?>
+                                                    <option value="<?php echo $tractor['TractorNumber']; ?>"><?php echo $tractor['TractorNumber']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="input-box">
+                                            <span class="details">Task:</span>
+                                            <select name="task" required>
+                                                <option value="">--Select Task--</option>
+                                                <?php foreach ($tasks as $task): ?>
+                                                    <option value="<?php echo $task['task_name']; ?>"><?php echo $task['task_name']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="input-box">
+                                            <span class="details">Minutes Used:</span>
+                                            <input type="number" name="hours_used" required />
+                                        </div>
+                                        <div class="input-box">
+                                            <span class="details">Area Covered (Acres):</span>
+                                            <input type="number" name="area_covered" required />
+                                        </div>
+                                        <div class="input-box">
+                                            <span class="details">Note:</span>
+                                            <textarea name="note" cols="83" rows="4" placeholder="Enter message" class="p-2"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="addNewButton mt-4">
+                                        <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Save</button>
+                                    </div>
+                                </form>
                           </form>
                             </div>
               </div>

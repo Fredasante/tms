@@ -193,7 +193,7 @@ $result_users = mysqli_query($con, $sql_users);
                 </div>
 
                 <!-- USER DETAILS TABLE STARTS -->
-               <section id="table" class="container">
+              <section id="table" class="container">
                 <div class="row">
                     <table class="content-table">
                         <thead>

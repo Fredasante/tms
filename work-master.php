@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 // Pagination settings
-$records_per_page = 5;
+$records_per_page = 8;
 $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
 
 // Query to retrieve total number of work records
@@ -205,8 +205,8 @@ $result_work_records = mysqli_query($con, $sql_work_records);
                                   <th>Sr. No</th>
                                   <th>Date</th>
                                   <th>Task</th>
-                                  <th>Hours Used</th>
-                                  <th>Area Covered (m²)</th>
+                                  <th>Minutes Used</th>
+                                  <th>Area Covered (Acres)</th>
                                   <th>Tractor Number</th>
                                   <th>Edit</th>
                               </tr>
@@ -216,7 +216,7 @@ $result_work_records = mysqli_query($con, $sql_work_records);
                               include 'config.php';
 
                               // Pagination settings
-                              $records_per_page = 5;
+                              $records_per_page = 8;
                               $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
                               $offset = ($current_page - 1) * $records_per_page;
 

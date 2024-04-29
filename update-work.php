@@ -189,51 +189,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </button>
               </a>
               <div class="title">EDIT WORK DETAILS</div>                         
-                            <div class="content">
-  <form method="post" action="">
-    <div class="user-details">
-        <div class="input-box">
-            <span class="details">Start Date & Time:</span>
-            <input type="datetime-local" name="start_datetime" value="<?php echo $start_datetime; ?>" required />
-        </div>
-        <div class="input-box">
-            <span class="details">End Date & Time:</span>
-            <input type="datetime-local" name="end_datetime" value="<?php echo $end_datetime; ?>" required />
-        </div>
-        <div class="input-box">
-            <span class="details">Tractor Number:</span>
-            <select name="tractor_id" required>
-                <?php while ($tractor_row = mysqli_fetch_assoc($tractor_result)): ?>
-                    <option value="<?php echo $tractor_row['TractorID']; ?>" <?php echo ($tractor_row['TractorID'] == $tractor_id) ? 'selected' : ''; ?>><?php echo $tractor_row['TractorNumber']; ?></option>
-                <?php endwhile; ?>
-            </select>
-        </div>
-        <div class="input-box">
-            <span class="details">Task:</span>
-            <select name="task_id" required>
-                <?php while ($task_row = mysqli_fetch_assoc($task_result)): ?>
-                    <option value="<?php echo $task_row['id']; ?>" <?php echo ($task_row['id'] == $task_id) ? 'selected' : ''; ?>><?php echo $task_row['task_name']; ?></option>
-                <?php endwhile; ?>
-            </select>
-        </div>
-        <div class="input-box">
-            <span class="details">Hours Used:</span>
-            <input type="number" name="hours_used" value="<?php echo $hours_used; ?>" required />
-        </div>
-        <div class="input-box">
-            <span class="details">Area Covered:</span>
-            <input type="number" name="area_covered" value="<?php echo $area_covered; ?>" required />
-        </div>
-        <div class="input-box">
-            <span class="details">Note:</span>
-            <textarea name="note" cols="83" rows="4" placeholder="Enter message" class="p-2"><?php echo $note; ?></textarea>
-        </div>
-    </div>
-    <div class="addNewButton mt-4">
-        <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Update</button>
-    </div>
-</form>
+                <div class="content">
+                    <form method="post" action="">
+                        <div class="user-details">
+                            <div class="input-box">
+                                <span class="details">Start Date & Time:</span>
+                                <input type="datetime-local" name="start_datetime" value="<?php echo $start_datetime; ?>" required />
                             </div>
+                            <div class="input-box">
+                                <span class="details">End Date & Time:</span>
+                                <input type="datetime-local" name="end_datetime" value="<?php echo $end_datetime; ?>" required />
+                            </div>
+                            <div class="input-box">
+                                <span class="details">Tractor Number:</span>
+                                <select name="tractor_id" required>
+                                    <?php while ($tractor_row = mysqli_fetch_assoc($tractor_result)): ?>
+                                        <option value="<?php echo $tractor_row['TractorID']; ?>" <?php echo ($tractor_row['TractorID'] == $tractor_id) ? 'selected' : ''; ?>><?php echo $tractor_row['TractorNumber']; ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="input-box">
+                                <span class="details">Task:</span>
+                                <select name="task_id" required>
+                                    <?php while ($task_row = mysqli_fetch_assoc($task_result)): ?>
+                                        <option value="<?php echo $task_row['id']; ?>" <?php echo ($task_row['id'] == $task_id) ? 'selected' : ''; ?>><?php echo $task_row['task_name']; ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="input-box">
+                                <span class="details">Minutes Used:</span>
+                                <input type="number" name="hours_used" value="<?php echo $hours_used; ?>" required />
+                            </div>
+                            <div class="input-box">
+                                <span class="details">Area Covered (Acres):</span>
+                                <input type="number" name="area_covered" value="<?php echo $area_covered; ?>" required />
+                            </div>
+                            <div class="input-box">
+                                <span class="details">Note:</span>
+                                <textarea name="note" cols="83" rows="4" placeholder="Enter message" class="p-2"><?php echo $note; ?></textarea>
+                            </div>
+                        </div>
+                        <div class="addNewButton mt-4">
+                            <button type="submit" class="btn btn-secondary rounded me-3 mb-2 px-4 py-2">Update</button>
+                        </div>
+                    </form>
+                </div>
               </div>
           </div>  
         </div>

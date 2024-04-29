@@ -1,4 +1,3 @@
-User
 <?php
 include 'config.php';
 
@@ -232,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </select>
             </div>
             <div class="input-box">
-                <span class="details">Hours Used:</span>
+                <span class="details">Minutes Used:</span>
                 <input type="number" id="hours_used" name="hours_used" readonly />
             </div>
             <div class="input-box">
@@ -256,14 +255,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </section>
     <!-- CONTENT -->
 
-        <script>
+    <script>
         // Function to calculate the difference in hours between two date/time strings
+        // Later changed to minutes (function names to be changed)
+
         function calculateHoursDifference(startDateTime, endDateTime) {
             const start = new Date(startDateTime);
             const end = new Date(endDateTime);
             const differenceMilliseconds = Math.abs(end - start);
-            const differenceHours = differenceMilliseconds / (1000 * 60 * 60);
-            return differenceHours.toFixed(2); // Return difference rounded to 2 decimal places
+            const differenceHours = differenceMilliseconds / (1000 * 60);
+            return differenceHours; // Return difference rounded to 2 decimal places
         }
 
         // Function to update the hours used field when start or end datetime is changed

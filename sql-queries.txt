@@ -68,7 +68,5 @@ CREATE TABLE TractorUsage (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-ALTER TABLE TractorUsage MODIFY hours_used DECIMAL(10,2);
-
 
 

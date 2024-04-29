@@ -84,6 +84,7 @@ if (isset($_GET['id'])) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -250,10 +251,11 @@ if (isset($_GET['id'])) {
                                   <?php endforeach; ?>
                               </select>
                           </div>
-                          <div class="input-box">
-                              <span class="details">Hours Used:</span>
-                              <input type="number" id="hours_used" name="hours_used" value="<?php echo $hours_used; ?>" readonly />
-                          </div>
+                            <div class="input-box">
+                                <span class="details">Minutes Used:</span>
+                                <input type="number" id="hours_used" name="hours_used" value="<?php echo isset($hours_used) ? $hours_used : $record['hours_used']; ?>" readonly />
+                            </div>
+
                           <div class="input-box">
                               <span class="details">Area Covered (acres):</span>
                               <input type="number" name="area_covered" value="<?php echo $area_covered; ?>" required />
@@ -277,12 +279,13 @@ if (isset($_GET['id'])) {
 
     <script>
         // Function to calculate the difference in hours between two date/time strings
+        // Later changed to minutes (function names to be changed)
         function calculateHoursDifference(startDateTime, endDateTime) {
             const start = new Date(startDateTime);
             const end = new Date(endDateTime);
             const differenceMilliseconds = Math.abs(end - start);
-            const differenceHours = differenceMilliseconds / (1000 * 60 * 60);
-            return differenceHours.toFixed(2); // Return difference rounded to 2 decimal places
+            const differenceHours = differenceMilliseconds / (1000 * 60);
+            return differenceHours; // Return difference rounded to 2 decimal places
         }
 
         // Function to update the hours used field when start or end datetime is changed

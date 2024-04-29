@@ -275,285 +275,219 @@ $total_tractors_this_year = $row_total_tractors_this_year['total_tractors'];
 
       <div class="container">
 
-<!-- <main class="padding1">
-<h4 class="mt-4 mb-2 dashboard-title">TRACTORS USED</h4>
+        <h4 class="dashboard-titles mb-3">TRACTOR USAGE STATISTICS</h4>
 
-<div class="row row-cols-1 row-cols-md-5">
-  <div class="card ms-3 me-4"> 
-  <div class="card-header">
-    TODAY
-  </div>
-  <div class="card-body">
-    <?php if (empty($total_tractors_recorded_work_today)): ?>
-    <h3>0</h3>
-<?php else: ?>
-    <h3><?php echo $total_tractors_recorded_work_today; ?></h3>
-<?php endif; ?>
-
-    </div>
-</div>
-
-<div class="card me-4">
-  <div class="card-header ">
-    YESTERDAY
-  </div>
-  <div class="card-body">
-       <?php if (empty($tractors_used_yesterday)): ?>
-                <h3>0</h3>
-            <?php else: ?>
-                <?php foreach ($tractors_used_yesterday as $tractor): ?>
-                    <h5><?php echo $tractor['TractorNumber']; ?></h5>
-                <?php endforeach; ?>
-            <?php endif; ?>
-  </div>
-</div>
-
-          <div class="card me-4">
-  <div class="card-header">
-    THIS MONTH
-  </div>
-  <div class="card-body">
-          <?php if (empty($tractors_used_this_month)): ?>
-                <h3>0</h3>
-            <?php else: ?>
-                <?php foreach ($tractors_used_this_month as $tractor): ?>
-                    <h5><?php echo $tractor['TractorNumber']; ?></h5>
-                <?php endforeach; ?>
-            <?php endif; ?>
-  </div>
-</div>
-
-          <div class="card">
-  <div class="card-header">
-    THIS YEAR
-  </div>
-  <div class="card-body">
-          <?php if (empty($tractors_used_this_year)): ?>
-                <h3>0</h3>
-            <?php else: ?>
-                <?php foreach ($tractors_used_this_year as $tractor): ?>
-                    <h5><?php echo $tractor['TractorNumber']; ?></h5>
-                <?php endforeach; ?>
-            <?php endif; ?>
-  </div>
-</div>       
-        </div>
-</main> -->
-<h4 class="dashboard-titles mb-3">TRACTOR USAGE STATISTICS</h4>
-
-<main class="mb-4 box1">
-    <h4 class="dashboard-title">TODAY</h4>
-      <ul class="box-info">
-				<li>
-            <i class='bx bxs-dashboard'></i>
-					  <span class="text">					
-            <p>TRACTORS USED</p>
-       <?php if (empty($total_tractors_recorded_work_today)): ?>
-        <h3>0</h3>
-        <?php else: ?>
-            <h3><?php echo $total_tractors_recorded_work_today; ?></h3>
-        <?php endif; ?>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-watch'></i>
-					<span class="text">
-						<p>HOURS USED</p>
-            <?php if (empty($total_hours_used_today)): ?>
-              <h5>0</h5>
-            <?php else: ?>
-              <h5><?php echo $total_hours_used_today; ?></h5>
-            <?php endif; ?>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-area'></i>
-					<span class="text">
-						<p>AREA COVERED</p>
-                <?php if (empty($total_area_covered_today)): ?>
-                    <h5>0</h5>
-                <?php else: ?>
-                    <h5><?php echo $total_area_covered_today; ?></h5>
-                <?php endif; ?>
-					</span>
-				</li>
-        		<li>
-					<i class='bx bxs-user'></i>
-					<span class="text">
-                  <p>TOTAL USERS</p>
-                <?php if (empty($total_users_recorded_work_today)): ?>
-                    <h5>0</h5>
-                <?php else: ?>
-                    <h5><?php echo $total_users_recorded_work_today; ?></h5>
-                <?php endif; ?>
-					</span>
-				</li>
-			</ul>
-</main>
-
-<main class="mb-4 box1">
-    <h4 class="dashboard-title">YESTERDAY</h4>
-      <ul class="box-info">
-				<li>
-            <i class='bx bxs-dashboard'></i>
-					  <span class="text">					
-            <p>TRACTORS USED</p>
-                 <?php if (empty($total_tractors_recorded_work_yesterday)): ?>
+        <!-- today -->
+        <main class="mb-4 box1">
+            <h4 class="dashboard-title">TODAY</h4>
+            <ul class="box-info">
+                        <li>
+                    <i class='bx bxs-dashboard'></i>
+                            <span class="text">					
+                    <p>TRACTORS USED</p>
+            <?php if (empty($total_tractors_recorded_work_today)): ?>
                 <h3>0</h3>
                 <?php else: ?>
-                    <h3><?php echo $total_tractors_recorded_work_yesterday; ?></h3>
+                    <h3><?php echo $total_tractors_recorded_work_today; ?></h3>
                 <?php endif; ?>
- 				</span>
-				</li>
-				<li>
-					<i class='bx bxs-watch'></i>
-					<span class="text">
-						<p>HOURS USED</p>
-            <?php if (empty($total_hours_used_yesterday)): ?>
-            <h5>0</h5>
-            <?php else: ?>
-              <h5><?php echo $total_hours_used_yesterday; ?></h5>
-            <?php endif; ?>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-area'></i>
-					<span class="text">
-                <p>AREA COVERED</p>
-                <?php if (empty($total_area_covered_yesterday)): ?>
+                            </span>
+                        </li>
+                        <li>
+                            <i class='bx bxs-watch'></i>
+                            <span class="text">
+                                <p>MINUTES USED</p>
+                    <?php if (empty($total_hours_used_today)): ?>
                     <h5>0</h5>
+                    <?php else: ?>
+                    <h5><?php echo $total_hours_used_today; ?></h5>
+                    <?php endif; ?>
+                            </span>
+                        </li>
+                        <li>
+                            <i class='bx bxs-area'></i>
+                            <span class="text">
+                                <p>AREA COVERED</p>
+                        <?php if (empty($total_area_covered_today)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_area_covered_today; ?></h5>
+                        <?php endif; ?>
+                            </span>
+                        </li>
+                        <li>
+                            <i class='bx bxs-user'></i>
+                            <span class="text">
+                        <p>TOTAL USERS</p>
+                        <?php if (empty($total_users_recorded_work_today)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_users_recorded_work_today; ?></h5>
+                        <?php endif; ?>
+                            </span>
+                        </li>
+                    </ul>
+        </main>
+
+        <!-- yesterday -->
+        <main class="mb-4 box1">
+            <h4 class="dashboard-title">YESTERDAY</h4>
+            <ul class="box-info">
+                        <li>
+                    <i class='bx bxs-dashboard'></i>
+                            <span class="text">					
+                    <p>TRACTORS USED</p>
+                        <?php if (empty($total_tractors_recorded_work_yesterday)): ?>
+                        <h3>0</h3>
+                        <?php else: ?>
+                            <h3><?php echo $total_tractors_recorded_work_yesterday; ?></h3>
+                        <?php endif; ?>
+                        </span>
+                        </li>
+                        <li>
+                            <i class='bx bxs-watch'></i>
+                            <span class="text">
+                                <p>MINUTES USED</p>
+                            <?php if (empty($total_hours_used_yesterday)): ?>
+                            <h5>0</h5>
+                            <?php else: ?>
+                            <h5><?php echo $total_hours_used_yesterday; ?></h5>
+                            <?php endif; ?>
+                            </span>
+                        </li>
+                        <li>
+                            <i class='bx bxs-area'></i>
+                            <span class="text">
+                        <p>AREA COVERED</p>
+                        <?php if (empty($total_area_covered_yesterday)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_area_covered_yesterday; ?></h5>
+                        <?php endif; ?>
+                            </span>
+                        </li>
+                        <li>
+                            <i class='bx bxs-user'></i>
+                            <span class="text">
+                        <p>TOTAL USERS</p>
+                        <?php if (empty($total_users_recorded_work_yesterday)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_users_recorded_work_yesterday; ?></h5>
+                        <?php endif; ?>
+                            </span>
+                        </li>
+                    </ul>
+        </main>
+
+        <!-- this month -->
+        <main class="mb-4 box1">
+            <h4 class="dashboard-title">THIS MONTH</h4>
+
+            <ul class="box-info">
+                <li>
+                    <i class='bx bxs-dashboard' ></i>
+                    <span class="text">
+                        <p>TRACTORS USED</p>
+                <?php if (empty($total_tractors_recorded_work_this_month)): ?>
+                    <h3>0</h3>
                 <?php else: ?>
-                    <h5><?php echo $total_area_covered_yesterday; ?></h5>
-                <?php endif; ?>
-					</span>
-				</li>
-        		<li>
-					<i class='bx bxs-user'></i>
-					<span class="text">
-                <p>TOTAL USERS</p>
-                <?php if (empty($total_users_recorded_work_yesterday)): ?>
+                    <h3><?php echo $total_tractors_recorded_work_this_month; ?></h3>
+                <?php endif; ?>      
+                    </span>
+                </li>
+
+                <li>
+                    <i class='bx bxs-watch'></i>
+                    <span class="text">
+                    <p>MINUTES USED</p>
+                    <?php if (empty($total_hours_used_this_month)): ?>
                     <h5>0</h5>
+                    <?php else: ?>
+                    <h5><?php echo $total_hours_used_this_month; ?></h5>
+                    <?php endif; ?>
+                    </span>
+                </li>
+
+                <li>
+                    <i class='bx bxs-area'></i>
+                    <span class="text">
+                        <p>AREA COVERED</p>
+                        <?php if (empty($total_area_covered_this_month)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_area_covered_this_month; ?></h5>
+                        <?php endif; ?>
+                    </span>
+                </li>
+
+                <!-- This Year -->
+                <li>
+                    <i class='bx bxs-user'></i>
+                    <span class="text">
+                        <p>TOTAL USERS</p>
+                        <?php if (empty($total_users_recorded_work_this_month)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_users_recorded_work_this_month; ?></h5>
+                        <?php endif; ?>
+                    </span>
+                </li>
+            </ul>
+        </main>
+
+        <!-- this year -->
+        <main class="mb-5 box1">
+            <h4 class="dashboard-title">THIS YEAR</h4>
+            <ul class="box-info">
+                <li>
+                    <i class='bx bxs-dashboard' ></i>
+                    <span class="text">
+                    <p>TRACTORS USED</p>
+                <?php if (empty($total_tractors_recorded_work_this_year)): ?>
+                    <h3>0</h3>
                 <?php else: ?>
-                    <h5><?php echo $total_users_recorded_work_yesterday; ?></h5>
+                    <h3><?php echo $total_tractors_recorded_work_this_year; ?></h3>
                 <?php endif; ?>
-					</span>
-				</li>
-			</ul>
-</main>
+                    </span>
+                </li>
 
-    <!-- area covered -->
-  <main class="mb-4 box1">
-    <h4 class="dashboard-title">THIS MONTH</h4>
-
-    <ul class="box-info">
-        <!-- Today -->
-        <li>
-            <i class='bx bxs-dashboard' ></i>
-            <span class="text">
-                <p>TRACTORS USED</p>
-          <?php if (empty($total_tractors_recorded_work_this_month)): ?>
-              <h3>0</h3>
-          <?php else: ?>
-              <h3><?php echo $total_tractors_recorded_work_this_month; ?></h3>
-          <?php endif; ?>      
-            </span>
-        </li>
-
-        <!-- Yesterday -->
-        <li>
-            <i class='bx bxs-watch'></i>
-            <span class="text">
-              <p>HOURS USED</p>
-            <?php if (empty($total_hours_used_this_month)): ?>
-              <h5>0</h5>
-            <?php else: ?>
-              <h5><?php echo $total_hours_used_this_month; ?></h5>
-            <?php endif; ?>
-            </span>
-        </li>
-
-        <!-- This Month -->
-        <li>
-            <i class='bx bxs-area'></i>
-            <span class="text">
-                <p>AREA COVERED</p>
-                <?php if (empty($total_area_covered_this_month)): ?>
+                <li>
+                    <i class='bx bxs-watch'></i>
+                    <span class="text">
+                    <p>MINUTES USED</p>
+                    <?php if (empty($total_hours_used_this_year)): ?>
                     <h5>0</h5>
-                <?php else: ?>
-                    <h5><?php echo $total_area_covered_this_month; ?></h5>
-                <?php endif; ?>
-            </span>
-        </li>
+                    <?php else: ?>
+                    <h5><?php echo $total_hours_used_this_year; ?></h5>
+                    <?php endif; ?>
+                    </span>
+                </li>
 
-        <!-- This Year -->
-        <li>
-            <i class='bx bxs-user'></i>
-            <span class="text">
-                <p>TOTAL USERS</p>
-                <?php if (empty($total_users_recorded_work_this_month)): ?>
-                    <h5>0</h5>
-                <?php else: ?>
-                    <h5><?php echo $total_users_recorded_work_this_month; ?></h5>
-                <?php endif; ?>
-            </span>
-        </li>
-    </ul>
-</main>
+                <li>
+                    <i class='bx bxs-area'></i>
+                    <span class="text">
+                        <p>AREA COVERED</p>
+                        <?php if (empty($total_area_covered_this_year)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_area_covered_this_year; ?></h5>
+                        <?php endif; ?>
+                    </span>
+                </li>
 
-<!-- this year -->
-<main class="mb-5 box1">
-    <h4 class="dashboard-title">THIS YEAR</h4>
-
-    <ul class="box-info">
-        <li>
-            <i class='bx bxs-dashboard' ></i>
-            <span class="text">
-            <p>TRACTORS USED</p>
-          <?php if (empty($total_tractors_recorded_work_this_year)): ?>
-              <h3>0</h3>
-          <?php else: ?>
-              <h3><?php echo $total_tractors_recorded_work_this_year; ?></h3>
-          <?php endif; ?>
-            </span>
-        </li>
-
-        <li>
-            <i class='bx bxs-watch'></i>
-            <span class="text">
-            <p>HOURS USED</p>
-            <?php if (empty($total_hours_used_this_year)): ?>
-              <h5>0</h5>
-            <?php else: ?>
-              <h5><?php echo $total_hours_used_this_year; ?></h5>
-            <?php endif; ?>
-            </span>
-        </li>
-
-        <li>
-            <i class='bx bxs-area'></i>
-            <span class="text">
-                <p>AREA COVERED</p>
-                <?php if (empty($total_area_covered_this_year)): ?>
-                    <h5>0</h5>
-                <?php else: ?>
-                    <h5><?php echo $total_area_covered_this_year; ?></h5>
-                <?php endif; ?>
-            </span>
-        </li>
-
-        <li>
-            <i class='bx bxs-user'></i>
-            <span class="text">
-                <p>TOTAL USERS</p>
-                <?php if (empty($total_users_recorded_work_this_year)): ?>
-                    <h5>0</h5>
-                <?php else: ?>
-                    <h5><?php echo $total_users_recorded_work_this_year; ?></h5>
-                <?php endif; ?>
-            </span>
-        </li>
-    </ul>
-</main>
+                <li>
+                    <i class='bx bxs-user'></i>
+                    <span class="text">
+                        <p>TOTAL USERS</p>
+                        <?php if (empty($total_users_recorded_work_this_year)): ?>
+                            <h5>0</h5>
+                        <?php else: ?>
+                            <h5><?php echo $total_users_recorded_work_this_year; ?></h5>
+                        <?php endif; ?>
+                    </span>
+                </li>
+            </ul>
+        </main>
 
 
 </section>
@@ -571,11 +505,8 @@ $total_tractors_this_year = $row_total_tractors_this_year['total_tractors'];
 
           </div>
         </div>
-      </div> -->
-
-
-      
-    </section>
+      </div> -->     
+</section>
     <!-- CONTENT -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

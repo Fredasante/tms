@@ -45,6 +45,14 @@ body {
   overflow-x: hidden;
   scrollbar-width: none;
 }
+
+@media (max-width: 768px) {
+  #sidebar {
+    display: none;
+    position: relative;
+    width: 0px !important;
+  }
+}
 #sidebar::--webkit-scrollbar {
   display: none;
 }
@@ -110,6 +118,12 @@ body {
   left: 280px;
   transition: 0.3s ease;
 }
+@media (max-width: 768px) {
+  #content {
+    width: 100%;
+    left: 20px !important;
+  }
+}
 #sidebar.hide ~ #content {
   width: calc(100% - 60px);
   left: 60px;
@@ -128,6 +142,7 @@ body {
   left: 0;
   z-index: 1000;
 }
+
 #content nav::before {
   content: "";
   position: absolute;
@@ -144,6 +159,12 @@ body {
 #content nav .bx.bx-menu {
   cursor: pointer;
   color: var(--dark);
+}
+
+@media (max-width: 768px) {
+  .bx-menu {
+    display: none;
+  }
 }
 #content nav .nav-link {
   font-size: 16px;
@@ -880,4 +901,18 @@ iframe {
 .box3 .card-header,
 .box4 .card-header {
   font-weight: 400;
+}
+
+.smallPadding {
+  margin-top: 38px !important;
+}
+
+@media (max-width: 768px) {
+  .smallPadding {
+    margin-top: 0 !important;
+  }
+
+  .searchSmall {
+    display: none;
+  }
 }
